@@ -1,0 +1,62 @@
+﻿@page "/user/edit/{userId:int}"
+@using VirtualPets2.Shared.Models
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Edit your Account!</h3>
+
+@if (errorMessage != null)
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+<div class="container">
+    <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label>Username:</label>
+            <InputText class="form-control" @bind-Value="model.Username" />
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <InputText class="form-control" @bind-Value="model.Password" />
+        </div>
+        <div class="form-group">
+            <label>Nickname:</label>
+            <InputText class="form-control" @bind-Value="model.Nickname" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public int userId { get; set; }
+    private UserEdit model = new();
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await http.GetFromJsonAsync<UserEdit>($"/api/user/{userId}");
+    }
+
+
+
+    private async void HandleSubmit()
+    {
+        /*System.Diagnostics.Debugger.Break();*/
+        var createRes = await http.PutAsJsonAsync<UserEdit>($"/api/user/edit/{userId}", model);
+
+        if (createRes.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/user");
+        }
+        else
+        {
+            errorMessage = "Could not edit your note right now. Please try again later.";
+        }
+    }
+}

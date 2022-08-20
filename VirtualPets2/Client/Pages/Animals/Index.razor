@@ -1,0 +1,208 @@
+﻿@page "/animal"
+@using Microsoft.AspNetCore.Authorization
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
+@attribute [Authorize]
+
+
+<h3>Welcome to the Animal Adoption Agency</h3>
+
+@if (user == null)
+{
+    <p><em>You have not made an account yet...</em></p>
+    <p>Please make an account, to purchase animals</p>
+    <a href=@("/user/create")>Click here to make an account</a>
+}
+else
+{
+    <h5>Search By:</h5>
+    <div class="col mx-auto justify-content-between">
+
+        <a href=@("animal/price")>Price</a>
+        <a href=@("animal/dwelling")>Animal Habitat</a>
+        <a href=@("animal/diet")>Animal Diet</a>
+
+    </div>
+    @foreach (var animal in animals)
+    {
+        if (animal.Type == "Feline")
+        {
+            Felines.Add(animal);
+        }
+        else if (animal.Type == "Ape")
+        {
+            Apes.Add(animal);
+        }
+        else if (animal.Type == "Mammal")
+        {
+            Mammals.Add(animal);
+        }
+        else if (animal.Type == "Bird")
+        {
+            Birds.Add(animal);
+        }
+        else if (animal.Type == "Reptile")
+        {
+            Reptiles.Add(animal);
+        }
+        else if (animal.Type == "Fish")
+        {
+            Fish.Add(animal);
+        }
+    }
+
+    <div class="row mt-3">
+        <h2>Felines</h2>
+        <hr class="mb-3" />
+        @foreach (var feline in Felines)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@feline.Title.ToUpper()</h3>
+                        <h6 class="card-text">Price: $@feline.Price</h6>
+                        <a href=@($"animal/{feline.Id}")>Details</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <h2>Apes</h2>
+        <hr class="mb-3" />
+        @foreach (var ape in Apes)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@ape.Title.ToUpper()</h3>
+                        <h6 class="card-text">Price: $@ape.Price</h6>
+                        <a href=@($"animal/{ape.Id}")>Details</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <h2>Mammals</h2>
+        <hr class="mb-3" />
+        @foreach (var mammal in Mammals)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@mammal.Title.ToUpper()</h3>
+                        <h6 class="card-text">Price: $@mammal.Price</h6>
+                        <a href=@($"animal/{mammal.Id}")>Details</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <h2>Reptiles</h2>
+        <hr class="mb-3" />
+        @foreach (var reptile in Reptiles)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@reptile.Title.ToUpper()</h3>
+                        <h6 class="card-text">Price: $@reptile.Price</h6>
+                        <a href=@($"animal/{reptile.Id}")>Details</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row mt-3">
+        <h2>Birds</h2>
+        <hr class="mb-3" />
+        @foreach (var bird in Birds)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@bird.Title.ToUpper()</h3>
+                        <h6 class="card-text">Price: $@bird.Price</h6>
+                        <a href=@($"animal/{bird.Id}")>Details</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <h3>Fish</h3>
+        <hr class="mb-3" />
+        @foreach (var fish in Fish)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@fish.Title.ToUpper()</h3>
+                        <h6 class="card-text">Price: $@fish.Price</h6>
+                        <a href=@($"animal/{fish.Id}")>Details</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+   
+          
+
+    @if (BuyDialogOpen)
+    {
+        <BuyModal Title="Congratulations on buying a new pet!" Text="They are so excited to live with you!"></BuyModal>
+    }
+}
+
+
+
+@code {
+    public UserDetails user;
+    public List<AnimalListItem> animals;
+    public UserAnimalCreate model = new();
+
+    public List<AnimalListItem> Felines = new List<AnimalListItem>();
+    public List<AnimalListItem> Mammals = new List<AnimalListItem>();
+    public List<AnimalListItem> Apes = new List<AnimalListItem>();
+    public List<AnimalListItem> Reptiles = new List<AnimalListItem>();
+    public List<AnimalListItem> Birds = new List<AnimalListItem>();
+    public List<AnimalListItem> Fish = new List<AnimalListItem>();
+
+
+    private AnimalListItem _animalToBuy;
+
+    public bool BuyDialogOpen { get; set; }
+
+    private async void OpenBuyDialog(AnimalListItem animal)
+    {
+        _animalToBuy = animal;
+        var createRes = http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+
+        if (createRes.IsSuccessStatusCode)
+        {
+            successMessage = $"Congratulations on buying a new pet! {model.Name} is so excited to live with you!";
+        }
+        else
+        {
+            errorMessage = "You don't have enough money to buy this animal :(";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await http.GetFromJsonAsync<UserDetails>("/api/user");
+        animals = await http.GetFromJsonAsync<List<AnimalListItem>>("/api/animal");
+    }
+}

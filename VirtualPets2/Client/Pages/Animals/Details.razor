@@ -1,0 +1,36 @@
+﻿@page "/animal/{animalId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
+@attribute [Authorize]
+
+<h3>@animal.Title Details</h3>
+
+<div class="row">
+    <div class="col mx-auto justify-content-between">
+        
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">@animal.Title.ToUpper()</h3>
+                <h6>Type: @animal.Type</h6>
+                <h6>Habitat: @animal.Dwelling</h6>
+                <h6>Diet: @animal.Diet</h6>
+                <h6>Price: $@animal.Price</h6>
+                <a href=@("animal")>Back to main page</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int animalId { get; set; }
+    public AnimalDetails animal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        animal = await http.GetFromJsonAsync<AnimalDetails>($"/api/animal/{animalId}");
+    }
+
+}

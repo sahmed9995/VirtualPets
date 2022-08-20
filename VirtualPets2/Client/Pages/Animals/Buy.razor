@@ -1,0 +1,58 @@
+﻿@page "/animal/buy/{animalId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+@if (errorMessage != null)
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@if (successMessage != null)
+{
+    <h6>@successMessage</h6>
+    <a href=@("/user")>Click here to go back to your profile!</a>
+}
+
+<div class="container">
+    <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label>Choose a name for your new pet:</label>
+            <InputText class="form-control" @bind-Value="model.Name" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public int animalId { get; set; }
+    private AnimalEdit model = new();
+    private string errorMessage;
+    private string successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await http.GetFromJsonAsync<AnimalEdit>($"/api/animal/{animalId}");
+    }
+
+    private async void HandleSubmit()
+    {
+        /*System.Diagnostics.Debugger.Break();*/
+        var createRes = await http.PutAsJsonAsync<AnimalEdit>($"/api/animal/buy/{animalId}", model);
+
+        if (createRes.IsSuccessStatusCode)
+        {
+            successMessage = $"Congratulations on buying a new pet! {model.Name} is so excited to live with you!";
+        }
+        else
+        {
+            errorMessage = "You don't have enough money to buy this animal :(";
+        }
+    }
+
+}

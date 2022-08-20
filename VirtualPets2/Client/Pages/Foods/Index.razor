@@ -1,0 +1,122 @@
+﻿@page "/food"
+@using Microsoft.AspNetCore.Authorization
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
+@attribute [Authorize]
+
+
+<h3>Welcome to Fluffy's Food Store</h3>
+
+@if (user == null)
+{
+    <p><em>You have not made an account yet...</em></p>
+    <p>Please make an account, to purchase food</p>
+    <a href=@("/user/create")>Click here to make an account</a>
+}
+else
+{
+    @*<h5>Search By:</h5>
+    <div class="col mx-auto justify-content-between">
+        <button><a href=@("animal/price")>Price</a></button>
+        <button><a href=@("animal/type")>Animal Type</a></button>
+
+        <button><a href=@("animal/dwelling")>Animal Habitat</a></button>
+
+        <button href=@("animal/diet")>Animal Diet</button>
+
+    </div>*@
+
+    <a href=@("/food/create")>Create a new Food</a>
+
+    @foreach (var food in foods)
+    {
+        if (food.Type == (Kind)0)
+        {
+            Meat.Add(food);
+        }
+        else if (food.Type == (Kind)1)
+        {
+            Plants.Add(food);
+        }
+        else if (food.Type == (Kind)2)
+        {
+            Dessert.Add(food);
+        }
+    }
+
+    <div class="row mt-3">
+        <h1>Meat</h1>
+        <hr class="mb-3" />
+        @foreach (var meat in Meat)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@meat.Name.ToUpper()</h3>
+                        <h6>Type: @meat.Type</h6>
+                        <h6 class="card-text">Price: $@meat.Price</h6>
+                        
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                    <a href=@($"food/buy/{meat.Id}") class="btn btn-primary">Buy</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <h1>Plants</h1>
+        <hr class="mb-3" />
+        @foreach (var plant in Plants)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@plant.Name.ToUpper()</h3>
+                        <h6>Type: @plant.Type</h6>
+                        <h6 class="card-text">Price: $@plant.Price</h6>
+                        <a href=@($"food/buy/{plant.Id}") class="btn btn-primary">Buy</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <h1>Dessert</h1>
+        <hr class="mb-3" />
+        @foreach (var d in Dessert)
+        {
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@d.Name.ToUpper()</h3>
+                        <h6>Type: @d.Type</h6>
+                        <h6 class="card-text">Price: $@d.Price</h6>
+                        <a href=@($"food/buy/{d.Id}") class="btn btn-primary">Buy</a>
+                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+
+
+@code {
+    public UserDetails user;
+    public List<FoodDetails> foods;
+
+    public List<FoodDetails> Meat = new List<FoodDetails>();
+    public List<FoodDetails> Plants = new List<FoodDetails>();
+    public List<FoodDetails> Dessert = new List<FoodDetails>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await http.GetFromJsonAsync<UserDetails>("/api/user");
+        foods = await http.GetFromJsonAsync<List<FoodDetails>>("/api/food");
+    }
+}

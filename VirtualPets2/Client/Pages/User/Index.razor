@@ -1,0 +1,57 @@
+﻿@page "/user"
+@using Microsoft.AspNetCore.Authorization
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
+@attribute [Authorize]
+
+<h3>Profile</h3>
+
+@if (user == null)
+{
+    <a href="/user/create">Create an account</a>
+}
+else
+{
+        <a href=@($"/user/edit/{user.Id}")>Update your account</a>
+}
+
+@if (user == null)
+{
+    <p><em>You have not made an account yet...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Account Information</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>@user.Id</td>
+                    <td><strong>Username: @user.Username</strong></td>
+                    <td><strong>Nickname: @user.Nickname</strong></td>
+                    <td><strong>Money: $@user.Money</strong></td>
+                    <td>
+                    <a href=@($"user/{user.Id}/animals")>Click here to see the animals that you have</a>
+                    </td>
+                <td>
+                    <a href=@($"user/{user.Id}/foods")>Click here to see the food that you have</a>
+                </td>
+                </tr>
+        </tbody>
+    </table>
+
+}
+
+@code {
+    public UserDetails user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await http.GetFromJsonAsync<UserDetails>("/api/user");
+    }
+
+}

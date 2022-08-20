@@ -1,0 +1,47 @@
+﻿@page "/user/{userId:int}/animals"
+@using VirtualPets2.Shared.Models
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient http
+@attribute [Authorize]
+
+<h3>Your Animals</h3>
+
+@if (animals == null)
+{
+    <p><em>You don't have any animals :( </em></p>
+    <a href=@($"animal")>You can buy a pet from here!</a>
+}
+else
+{
+     <div class="row">
+         <div class="col mx-auto justify-content-between">
+            @foreach (var animal in animals)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@animal.Name.ToUpper()</h3>
+                        <h6>Title: @animal.Title</h6>
+                        <h6>Type: @animal.Type</h6>
+                        <h6>Dwelling: @animal.Dwelling</h6>
+                        <h6>Diet: @animal.Diet</h6>
+                    </div>
+                    <a href="animal/{animalId}/name">Change your pet's name</a>
+                </div>
+            }
+         </div>
+     </div>
+}
+
+@code {
+    [Parameter]
+    public int userId { get; set; }
+
+    public IEnumerable<AnimalUserDetails> animals;
+
+    protected override async Task OnInitializedAsync()
+    {
+        animals = await http.GetFromJsonAsync<List<AnimalUserDetails>>($"/api/user/{userId}");
+    }
+}
+
+

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "eup5PN37yjqfiYTav6e3plwJZoWPpZrk95VxYx0bXCZzF7MqS2GABjSGsSZ3gcgZicC3zF4FQrQDb/Qwfsdc2Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ssagl\\ElevenFiftyProjects\\codingImmersions\\Assignments\\VirtualPets2\\VirtualPets2\\Shared\\VirtualPets2.Shared.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ssagl\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

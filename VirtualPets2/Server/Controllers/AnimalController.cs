@@ -1,0 +1,58 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using VirtualPets2.Server.Services.Animals;
+using VirtualPets2.Server.Services.Users;
+using VirtualPets2.Shared.Models;
+
+namespace VirtualPets2.Server.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AnimalController : ControllerBase
+    {
+        private readonly IAnimalService _service;
+        public AnimalController(IAnimalService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        public async Task<List<AnimalListItem>> Index()
+        {
+            var animals = await _service.GetAllAnimalsAsync();
+            return animals.ToList();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<AnimalDetails> Details(int id)
+        {
+            var animal = await _service.GetAnimalAsync(id);
+            return animal;
+        }
+
+        [HttpGet("price")]
+        public IActionResult Price()
+        {
+            return Redirect("price");
+        }
+
+        [HttpGet("price/{money}")]
+        public async Task<List<AnimalListItem>> Price2(double money)
+        {
+            var animals = await _service.GetAllAnimalsByPriceAsync(money);
+            return animals.ToList();
+        }
+
+        [HttpPost("{animalId}/buy/{userId}")]
+        public async Task<IActionResult> AddAnimalToUser(int userId, int animalId, UserAnimalCreate model)
+        {
+            bool newPet = await _service.BuyAnimal(userId, animalId, model);
+
+            if (newPet) return Ok();
+            else
+            {
+                return UnprocessableEntity();
+            }
+        }
+    }
+}
