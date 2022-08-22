@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using VirtualPets2.Client.Pages.Animals;
 using VirtualPets2.Server.Data;
 using VirtualPets2.Server.Models;
 using VirtualPets2.Shared.Models;
@@ -57,24 +58,31 @@ namespace VirtualPets2.Server.Services.Users
 
         public async Task<IEnumerable<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId)
         {
+            List<AnimalEntity> animalList = new List<AnimalEntity>();
+            
             var animals = await _context.UserAnimals
                 .Where(u => u.UserId == userId).ToListAsync();
 
             if (animals != null)
             {
-                foreach (var animal in animals)
+                foreach(var animal in animals)
                 {
-                    return _context.Animals
-                        .Where(a => a.Id == animal.AnimalId)
-                        .Select(a => new AnimalUserDetails
-                        {
-                            Title = a.Title,
-                            Name = a.Name,
-                            Type = a.Type,
-                            Dwelling = a.Dwelling,
-                            Diet = (Food)a.Diet
-                        });
+                    var details = await _context.Animals
+                    .FirstOrDefaultAsync(a => a.Id == animal.AnimalId);
+
+                    animalList.Add(details);
                 }
+
+                var userAnimals = animalList
+                    .Select(a => new AnimalUserDetails
+                    {
+                        Title = a.Title,
+                        Name = a.Name,
+                        Type = a.Type,
+                        Dwelling = a.Dwelling,
+                        Diet = (Food)a.Diet
+                    });
+                return userAnimals.ToList();
             }
             return null;
         }

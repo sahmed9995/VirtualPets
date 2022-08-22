@@ -40,15 +40,15 @@ namespace VirtualPets2.Server.Controllers
             return user;
         }
 
-        [HttpGet("{id}/animals")]
+        [HttpGet("{userId:int}/animals")]
 
-        //public async Task<IEnumerable<AnimalUserDetails>> Animals(int id)
-        //{ 
-        //    if (!SetUserIdInService()) return new List<AnimalUserDetails>();
+        public async Task<IEnumerable<AnimalUserDetails>> Animals(int userId)
+        { 
+            //if (!SetUserIdInService()) return new List<AnimalUserDetails>();
 
-        //    var animals = await _service.ShowAnimalsbyUserIdAsync(id);
-        //    return animals.ToList();
-        //}
+            var animals = await _service.ShowAnimalsbyUserIdAsync(userId);
+            return animals;
+        }
 
         //[HttpGet("{id}/foods")]
 

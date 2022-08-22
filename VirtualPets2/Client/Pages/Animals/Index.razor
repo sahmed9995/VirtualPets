@@ -62,7 +62,7 @@ else
                         <h3 class="card-title mb-3">@feline.Title.ToUpper()</h3>
                         <h6 class="card-text">Price: $@feline.Price</h6>
                         <a href=@($"animal/{feline.Id}")>Details</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(feline)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@ else
                         <h3 class="card-title mb-3">@ape.Title.ToUpper()</h3>
                         <h6 class="card-text">Price: $@ape.Price</h6>
                         <a href=@($"animal/{ape.Id}")>Details</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(ape)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@ else
                         <h3 class="card-title mb-3">@mammal.Title.ToUpper()</h3>
                         <h6 class="card-text">Price: $@mammal.Price</h6>
                         <a href=@($"animal/{mammal.Id}")>Details</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(mammal)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@ else
                         <h3 class="card-title mb-3">@reptile.Title.ToUpper()</h3>
                         <h6 class="card-text">Price: $@reptile.Price</h6>
                         <a href=@($"animal/{reptile.Id}")>Details</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(reptile)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@ else
                         <h3 class="card-title mb-3">@bird.Title.ToUpper()</h3>
                         <h6 class="card-text">Price: $@bird.Price</h6>
                         <a href=@($"animal/{bird.Id}")>Details</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(bird)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -151,7 +151,7 @@ else
                         <h3 class="card-title mb-3">@fish.Title.ToUpper()</h3>
                         <h6 class="card-text">Price: $@fish.Price</h6>
                         <a href=@($"animal/{fish.Id}")>Details</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(fish)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -160,10 +160,15 @@ else
    
           
 
-    @if (BuyDialogOpen)
+    @if (BuyDialogOpenSuccess)
     {
         <BuyModal Title="Congratulations on buying a new pet!" Text="They are so excited to live with you!"></BuyModal>
     }
+    @if (BuyDialogOpenFail)
+    {
+        <BuyModal Title="Better Luck Next Time" Text="Sorry, it looks like you don't have enough money to buy this animal!"></BuyModal>
+    }
+
 }
 
 
@@ -172,6 +177,7 @@ else
     public UserDetails user;
     public List<AnimalListItem> animals;
     public UserAnimalCreate model = new();
+    public UserMoney userMoney = new();
 
     public List<AnimalListItem> Felines = new List<AnimalListItem>();
     public List<AnimalListItem> Mammals = new List<AnimalListItem>();
@@ -183,22 +189,62 @@ else
 
     private AnimalListItem _animalToBuy;
 
-    public bool BuyDialogOpen { get; set; }
+    public bool BuyDialogOpenSuccess { get; set; }
+    public bool BuyDialogOpenFail { get; set; }
 
-    private async void OpenBuyDialog(AnimalListItem animal)
+    private async Task OpenBuyDialog(AnimalListItem aniUser)
     {
-        _animalToBuy = animal;
-        var createRes = http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+        _animalToBuy = aniUser;
 
-        if (createRes.IsSuccessStatusCode)
+        if (user.Money < _animalToBuy.Price)
         {
-            successMessage = $"Congratulations on buying a new pet! {model.Name} is so excited to live with you!";
+            BuyDialogOpenFail = true;
         }
         else
         {
-            errorMessage = "You don't have enough money to buy this animal :(";
+            var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/buy/{_animalToBuy.Id}", userMoney);
+
+            if (updated.IsSuccessStatusCode)
+            {
+                var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    BuyDialogOpenSuccess = true;
+                }
+                else
+                {
+                    BuyDialogOpenFail = true;
+                }
+            }
+            else
+            {
+                BuyDialogOpenFail = true;
+            }
+            
+
         }
+
+        
+
     }
+
+    //private async void OpenBuyDialog()
+    //{
+
+    //    await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+    //    //await LoadData();
+
+
+    //    //if (createRes.IsSuccessStatusCode)
+    //    //{
+    //    //    successMessage = $"Congratulations on buying a new pet! {_animalToBuy.Name} is so excited to live with you!";
+    //    //}
+    //    //else
+    //    //{
+    //    //    errorMessage = "You don't have enough money to buy this animal :(";
+    //    //}
+    //}
 
     protected override async Task OnInitializedAsync()
     {

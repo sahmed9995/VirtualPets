@@ -54,5 +54,18 @@ namespace VirtualPets2.Server.Controllers
                 return UnprocessableEntity();
             }
         }
+
+        [HttpPut("{userId}/buy/{animalId}")]
+        public async Task<IActionResult> ChangeUserMoney(int animalId, int userId, UserMoney model)
+        {
+
+            bool wasUpdated = await _service.ChangeMoney(animalId, userId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
     }
 }

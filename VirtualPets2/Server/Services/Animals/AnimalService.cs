@@ -3,6 +3,7 @@ using VirtualPets2.Server.Data;
 using VirtualPets2.Server.Services.Users;
 using VirtualPets2.Shared.Models;
 using VirtualPets2.Server.Models;
+using VirtualPets2.Client.Pages.User;
 
 namespace VirtualPets2.Server.Services.Animals
 {
@@ -71,27 +72,38 @@ namespace VirtualPets2.Server.Services.Animals
 
             if (user == null) return false;
 
-            if (animal.Price > user.Money)
+            var aniUser = new UserAnimal
             {
-                return false;
-            }
-            else
-            {
-                user.Money -= animal.Price;
+                UserId = user.Id,
+                AnimalId = animal.Id
+            };
 
-                var aniUser = new UserAnimal
-                {
-                    UserId = user.Id,
-                    AnimalId = animal.Id
-                };
-
-                await _context.UserAnimals.AddAsync(aniUser);
-                var numberOfChanges = await _context.SaveChangesAsync();
-                return numberOfChanges == 1;
-            }
+            await _context.UserAnimals.AddAsync(aniUser);
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
         }
 
-       
+        public async Task<bool> ChangeMoney(int animalId, int userId, UserMoney model)
+        {
+            var animal = await _context.Animals
+                .FirstOrDefaultAsync(a => a.Id == animalId);
+
+            if (animal == null) return false;
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money - animal.Price;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
+
         //    _context.UserAnimals.Add(new UserAnimal()
         //    {
         //        UserId = model.UserId,
@@ -122,6 +134,28 @@ namespace VirtualPets2.Server.Services.Animals
         //    }
         //}
 
+        //private async Task<bool> CanUserBuyAnimal(int userId, int animalId)
+        //{
+        //    var animal = await _context.Animals
+        //        .FirstOrDefaultAsync(a => a.Id == animalId);
 
+        //    if (animal == null) return false;
+
+        //    var user = await _context.Users
+        //        .FirstOrDefaultAsync(a => a.Id == userId);
+
+        //    if (user == null) return false;
+
+        //    if (user.Money < animal.Price)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+
+        //        return true;
+        //    }
+
+        
     }
 }
