@@ -255,6 +255,14 @@ else
         }
     }
 
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
 
     //private async void OpenBuyDialog()
     //{
