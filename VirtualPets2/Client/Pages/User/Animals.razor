@@ -36,11 +36,11 @@ else
     [Parameter]
     public int userId { get; set; }
 
-    public IEnumerable<AnimalUserDetails> animals;
+    public List<AnimalUserDetails> animals { get; set; } = new List<AnimalUserDetails>();
 
     protected override async Task OnInitializedAsync()
     {
-        animals = await http.GetFromJsonAsync<List<AnimalUserDetails>>($"/api/user/{userId}");
+        animals = await http.GetFromJsonAsync<List<AnimalUserDetails>>($"/api/user/{userId}/animals");
     }
 }
 

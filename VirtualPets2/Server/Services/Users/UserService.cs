@@ -56,7 +56,7 @@ namespace VirtualPets2.Server.Services.Users
             return details;
         }
 
-        public async Task<IEnumerable<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId)
+        public async Task<List<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId)
         {
             List<AnimalEntity> animalList = new List<AnimalEntity>();
             

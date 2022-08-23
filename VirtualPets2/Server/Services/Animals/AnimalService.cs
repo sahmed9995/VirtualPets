@@ -75,7 +75,8 @@ namespace VirtualPets2.Server.Services.Animals
             var aniUser = new UserAnimal
             {
                 UserId = user.Id,
-                AnimalId = animal.Id
+                AnimalId = animal.Id,
+                Name = model.Name
             };
 
             await _context.UserAnimals.AddAsync(aniUser);

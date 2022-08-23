@@ -35,19 +35,16 @@ namespace VirtualPets2.Server.Controllers
         public async Task<UserDetails> Index()
         {
             if (!SetUserIdInService()) return new UserDetails();
-
             var user = await _service.GetUserAsync();
             return user;
         }
 
-        [HttpGet("{userId:int}/animals")]
-
-        public async Task<IEnumerable<AnimalUserDetails>> Animals(int userId)
+        [HttpGet("{userId}/animals")]
+        public async Task<List<AnimalUserDetails>> UserAnimal(int userId)
         { 
-            //if (!SetUserIdInService()) return new List<AnimalUserDetails>();
-
+            if (!SetUserIdInService()) return new List<AnimalUserDetails>();
             var animals = await _service.ShowAnimalsbyUserIdAsync(userId);
-            return animals;
+            return animals.ToList();
         }
 
         //[HttpGet("{id}/foods")]
@@ -72,7 +69,6 @@ namespace VirtualPets2.Server.Controllers
             {
                 return UnprocessableEntity();
             }
-
         }
 
         [HttpPut("edit/{id}")]
@@ -81,7 +77,6 @@ namespace VirtualPets2.Server.Controllers
             if (!SetUserIdInService()) return Unauthorized();
 
             bool wasUpdated = await _service.UpdateUserAsync(model);
-
             if (wasUpdated) return Ok();
             else
             {

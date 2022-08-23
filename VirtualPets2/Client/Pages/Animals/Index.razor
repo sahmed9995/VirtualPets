@@ -3,6 +3,7 @@
 @using VirtualPets2.Shared.Models
 @inject HttpClient http
 @attribute [Authorize]
+@inject NavigationManager navigation
 
 
 <h3>Welcome to the Animal Adoption Agency</h3>
@@ -157,12 +158,37 @@ else
             </div>
         }
     </div>
-   
-          
+     
 
     @if (BuyDialogOpenSuccess)
     {
-        <BuyModal Title="Congratulations on buying a new pet!" Text="They are so excited to live with you!"></BuyModal>
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Congratulations on buying a new pet! </h4>
+                        <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>They are so excited to live with you!</p>
+                        <div class="container">
+                            <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                <div class="form-group">
+                                    <label>Choose a name for your new pet:</label>
+                                    <InputText class="form-control" @bind-Value="model.Name" />
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+                            </EditForm>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
     @if (BuyDialogOpenFail)
     {
@@ -206,28 +232,29 @@ else
 
             if (updated.IsSuccessStatusCode)
             {
-                var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    BuyDialogOpenSuccess = true;
-                }
-                else
-                {
-                    BuyDialogOpenFail = true;
-                }
+                BuyDialogOpenSuccess = true;
             }
             else
             {
                 BuyDialogOpenFail = true;
             }
-            
-
         }
-
-        
-
     }
+
+    private async void HandleSubmit()
+    {
+        var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+
+        if (response.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/user");
+        }
+        else
+        {
+            BuyDialogOpenFail = true;
+        }
+    }
+
 
     //private async void OpenBuyDialog()
     //{
