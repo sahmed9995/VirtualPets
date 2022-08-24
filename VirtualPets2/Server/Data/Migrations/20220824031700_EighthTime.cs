@@ -4,7 +4,7 @@
 
 namespace VirtualPets2.Server.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class EighthTime : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -118,7 +118,12 @@ namespace VirtualPets2.Server.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    AnimalId = table.Column<int>(type: "int", nullable: false)
+                    AnimalId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Dwelling = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Diet = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,7 +159,7 @@ namespace VirtualPets2.Server.Data.Migrations
                     { 10, 0, "Marshes/Lakes", null, 650.45000000000005, "Otter", "Mammal", null },
                     { 11, 1, "Desert/Grasslands", null, 150.44999999999999, "Warthog", "Mammal", null },
                     { 12, 1, "Desert", null, 250.44999999999999, "Meerkat", "Mammal", null },
-                    { 13, 0, "Grasslands/Forest/Savannahs", null, 450.44999999999999, "Hyena", "Feline", null },
+                    { 13, 0, "Grasslands/Forest/Savannahs", null, 450.44999999999999, "Hyena", "Mammal", null },
                     { 14, 1, "Grasslands/Forest/Savannahs/Desert", null, 1650.45, "Elephant", "Mammal", null },
                     { 15, 0, "Ocean", null, 2500.54, "Blue Whale", "Mammal", null },
                     { 16, 1, "Desert/Savannahs/Grasslands", null, 850.45000000000005, "Rhinocerous", "Mammal", null },
@@ -273,7 +278,7 @@ namespace VirtualPets2.Server.Data.Migrations
                     { 63, "Hershey's Chocolate Bar", 5, 2 },
                     { 64, "Strawberry Rhubarb Pie", 15, 2 },
                     { 65, "Funnel Cake", 5, 2 },
-                    { 66, "Chicken Skewers", 15, 2 },
+                    { 66, "Chicken Skewers", 15, 0 },
                     { 67, "Philly Cheesesteak", 15, 0 },
                     { 68, "Red Sockeye Salmon", 15, 0 },
                     { 69, "Ahi Tuna", 45, 0 },

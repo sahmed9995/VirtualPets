@@ -76,12 +76,10 @@ namespace VirtualPets2.Server.Services.Animals
             {
                 UserId = user.Id,
                 AnimalId = animal.Id,
-                Name = model.Name
             };
 
-            await _context.UserAnimals.AddAsync(aniUser);
-            var numberOfChanges = await _context.SaveChangesAsync();
-            return numberOfChanges == 1;
+            _context.UserAnimals.Add(aniUser);
+            return await _context.SaveChangesAsync() == 1;
         }
 
         public async Task<bool> ChangeMoney(int animalId, int userId, UserMoney model)
@@ -102,6 +100,18 @@ namespace VirtualPets2.Server.Services.Animals
 
             var numberOfChanges = await _context.SaveChangesAsync();
             return numberOfChanges == 1;
+        }
+
+        public async Task<bool> ChangeAnimalName(int animalId, AnimalEdit model)
+        {
+            var animal = await _context.Animals
+                .FindAsync(animalId);
+
+            animal.Name = model.Name;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+
         }
 
 

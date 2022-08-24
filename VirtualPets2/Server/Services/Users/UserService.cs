@@ -27,7 +27,7 @@ namespace VirtualPets2.Server.Services.Users
             {
                 UserId = _userId,
                 Username = model.Username,
-                Password = model.Password, 
+                Password = model.Password,
                 Nickname = model.Nickname,
                 Money = 650.54,
             };
@@ -59,20 +59,19 @@ namespace VirtualPets2.Server.Services.Users
         public async Task<List<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId)
         {
             List<AnimalEntity> animalList = new List<AnimalEntity>();
-            
+
             var animals = await _context.UserAnimals
                 .Where(u => u.UserId == userId).ToListAsync();
 
             if (animals != null)
             {
-                foreach(var animal in animals)
+                foreach (var animal in animals)
                 {
                     var details = await _context.Animals
                     .FirstOrDefaultAsync(a => a.Id == animal.AnimalId);
 
                     animalList.Add(details);
                 }
-
                 var userAnimals = animalList
                     .Select(a => new AnimalUserDetails
                     {

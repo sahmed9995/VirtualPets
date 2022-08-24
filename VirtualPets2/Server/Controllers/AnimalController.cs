@@ -67,5 +67,18 @@ namespace VirtualPets2.Server.Controllers
                 return BadRequest(0);
             }
         }
+
+        [HttpPut("{animalId}/name")]
+        public async Task<IActionResult> ChangeAnimalName(int animalId, AnimalEdit model)
+        {
+
+            bool wasUpdated = await _service.ChangeAnimalName(animalId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
     }
 }

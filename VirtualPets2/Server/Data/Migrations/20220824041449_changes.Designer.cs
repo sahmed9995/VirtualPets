@@ -12,8 +12,8 @@ using VirtualPets2.Server.Data;
 namespace VirtualPets2.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220818183356_Initial")]
-    partial class Initial
+    [Migration("20220824041449_changes")]
+    partial class changes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -456,7 +456,7 @@ namespace VirtualPets2.Server.Data.Migrations
                             Dwelling = "Grasslands/Forest/Savannahs",
                             Price = 450.44999999999999,
                             Title = "Hyena",
-                            Type = "Feline"
+                            Type = "Mammal"
                         },
                         new
                         {
@@ -1296,7 +1296,7 @@ namespace VirtualPets2.Server.Data.Migrations
                             Id = 66,
                             Name = "Chicken Skewers",
                             Price = 15,
-                            Type = 2
+                            Type = 0
                         },
                         new
                         {

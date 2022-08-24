@@ -162,37 +162,39 @@ else
 
     @if (BuyDialogOpenSuccess)
     {
+        <BuyModal Title="Congratulations on buying a new pet!" Text="They are so excited to live with you!"></BuyModal>
+    }
+    @if (BuyDialogOpenFail)
+    {
+        <BuyModal Title="Better Luck Next Time" Text="Sorry, it looks like you don't have enough money to buy this animal!"></BuyModal>
+    }
+
+    if (NameDialog)
+    {
         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Congratulations on buying a new pet! </h4>
+                        <h4 class="modal-title">Animal Name</h4>
                         <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <p>They are so excited to live with you!</p>
                         <div class="container">
                             <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
                                 <DataAnnotationsValidator />
                                 <ValidationSummary />
                                 <div class="form-group">
                                     <label>Choose a name for your new pet:</label>
-                                    <InputText class="form-control" @bind-Value="model.Name" />
+                                    <InputText class="form-control" @bind-Value="name.Name" />
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
                             </EditForm>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <a href=@("/user")>Click here to go back to your profile</a>
-                    </div>
                 </div>
             </div>
         </div>
-    }
-    @if (BuyDialogOpenFail)
-    {
-        <BuyModal Title="Better Luck Next Time" Text="Sorry, it looks like you don't have enough money to buy this animal!"></BuyModal>
+
     }
 
 }
@@ -204,6 +206,7 @@ else
     public List<AnimalListItem> animals;
     public UserAnimalCreate model = new();
     public UserMoney userMoney = new();
+    public AnimalEdit name = new();
 
     public List<AnimalListItem> Felines = new List<AnimalListItem>();
     public List<AnimalListItem> Mammals = new List<AnimalListItem>();
@@ -217,6 +220,7 @@ else
 
     public bool BuyDialogOpenSuccess { get; set; }
     public bool BuyDialogOpenFail { get; set; }
+    public bool NameDialog { get; set; }
 
     private async Task OpenBuyDialog(AnimalListItem aniUser)
     {
@@ -232,20 +236,25 @@ else
 
             if (updated.IsSuccessStatusCode)
             {
-                BuyDialogOpenSuccess = true;
-            }
-            else
-            {
-                BuyDialogOpenFail = true;
+                var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    NameDialog = true;
+                }
+                else
+                {
+                    BuyDialogOpenFail = true;
+                }
             }
         }
     }
 
     private async void HandleSubmit()
     {
-        var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+        var changed = await http.PutAsJsonAsync($"/api/animal/{_animalToBuy.Id}/name", name);
 
-        if (response.IsSuccessStatusCode)
+        if (changed.IsSuccessStatusCode)
         {
             navigation.NavigateTo("/user");
         }
@@ -253,6 +262,7 @@ else
         {
             BuyDialogOpenFail = true;
         }
+    
     }
 
     [Parameter]

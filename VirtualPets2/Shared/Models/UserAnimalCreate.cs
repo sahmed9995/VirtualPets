@@ -10,6 +10,5 @@ namespace VirtualPets2.Shared.Models
     {
         public int UserId { get; set; }
         public int AnimalId { get; set; }
-        public string Name { get; set; }
     }
 }
