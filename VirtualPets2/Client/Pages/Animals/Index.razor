@@ -158,12 +158,28 @@ else
             </div>
         }
     </div>
+
+    @if (CannotBuyDialog)
+    {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">You cannot buy this animal</h4>
+                        <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Sorry, it looks like you have already bought this animal!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/animal")>Click here to go buy another animal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
      
 
-    @if (BuyDialogOpenSuccess)
-    {
-        <BuyModal Title="Congratulations on buying a new pet!" Text="They are so excited to live with you!"></BuyModal>
-    }
     @if (BuyDialogOpenFail)
     {
         <BuyModal Title="Better Luck Next Time" Text="Sorry, it looks like you don't have enough money to buy this animal!"></BuyModal>
@@ -194,7 +210,6 @@ else
                 </div>
             </div>
         </div>
-
     }
 
 }
@@ -207,6 +222,7 @@ else
     public UserAnimalCreate model = new();
     public UserMoney userMoney = new();
     public AnimalEdit name = new();
+    public List<UserAnimalDetails> userAnimals;
 
     public List<AnimalListItem> Felines = new List<AnimalListItem>();
     public List<AnimalListItem> Mammals = new List<AnimalListItem>();
@@ -218,17 +234,29 @@ else
 
     private AnimalListItem _animalToBuy;
 
-    public bool BuyDialogOpenSuccess { get; set; }
     public bool BuyDialogOpenFail { get; set; }
     public bool NameDialog { get; set; }
+    public bool CannotBuyDialog { get; set; }
 
     private async Task OpenBuyDialog(AnimalListItem aniUser)
     {
         _animalToBuy = aniUser;
 
+        foreach (var animal in userAnimals)
+        {
+            if ( animal.AnimalId == _animalToBuy.Id)
+            {
+                CannotBuyDialog = true;
+            }
+        }
+
         if (user.Money < _animalToBuy.Price)
         {
             BuyDialogOpenFail = true;
+        }
+        else if (CannotBuyDialog == true)
+        {
+            navigation.NavigateTo("/animal");
         }
         else
         {
@@ -262,7 +290,7 @@ else
         {
             BuyDialogOpenFail = true;
         }
-    
+
     }
 
     [Parameter]
@@ -274,26 +302,10 @@ else
     }
 
 
-    //private async void OpenBuyDialog()
-    //{
-
-    //    await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
-    //    //await LoadData();
-
-
-    //    //if (createRes.IsSuccessStatusCode)
-    //    //{
-    //    //    successMessage = $"Congratulations on buying a new pet! {_animalToBuy.Name} is so excited to live with you!";
-    //    //}
-    //    //else
-    //    //{
-    //    //    errorMessage = "You don't have enough money to buy this animal :(";
-    //    //}
-    //}
-
     protected override async Task OnInitializedAsync()
     {
         user = await http.GetFromJsonAsync<UserDetails>("/api/user");
         animals = await http.GetFromJsonAsync<List<AnimalListItem>>("/api/animal");
+        userAnimals = await http.GetFromJsonAsync<List<UserAnimalDetails>>($"/api/animal/{user.Id}/Ids");
     }
 }

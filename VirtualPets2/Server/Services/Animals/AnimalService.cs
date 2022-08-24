@@ -104,13 +104,36 @@ namespace VirtualPets2.Server.Services.Animals
 
         public async Task<bool> ChangeAnimalName(int animalId, AnimalEdit model)
         {
-            var animal = await _context.Animals
-                .FindAsync(animalId);
+            var animal = await _context.UserAnimals
+                .FirstOrDefaultAsync(u => u.AnimalId == animalId);
 
             animal.Name = model.Name;
 
             var numberOfChanges = await _context.SaveChangesAsync();
             return numberOfChanges == 1;
+
+        }
+
+        public async Task<List<AnimalEdit>> GetAnimalNames(int userId)
+        {
+            var animalNames = _context.UserAnimals
+                .Where(u => u.UserId == userId)
+                .Select(u => new AnimalEdit
+                {
+                    Name = u.Name
+                });
+            return await animalNames.ToListAsync();
+        }
+
+        public async Task<List<UserAnimalDetails>> GetAnimalIds(int userId)
+        {
+            var animalIds = _context.UserAnimals
+                .Where(u => u.UserId == userId)
+                .Select(u => new UserAnimalDetails
+                {
+                    AnimalId = u.AnimalId
+                });
+            return await animalIds.ToListAsync();
 
         }
 

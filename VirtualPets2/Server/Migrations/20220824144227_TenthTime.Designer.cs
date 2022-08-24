@@ -9,11 +9,11 @@ using VirtualPets2.Server.Data;
 
 #nullable disable
 
-namespace VirtualPets2.Server.Data.Migrations
+namespace VirtualPets2.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220824041449_changes")]
-    partial class changes
+    [Migration("20220824144227_TenthTime")]
+    partial class TenthTime
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1503,6 +1503,9 @@ namespace VirtualPets2.Server.Data.Migrations
 
                     b.Property<int>("AnimalId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

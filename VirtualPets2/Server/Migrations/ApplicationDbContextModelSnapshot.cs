@@ -8,7 +8,7 @@ using VirtualPets2.Server.Data;
 
 #nullable disable
 
-namespace VirtualPets2.Server.Data.Migrations
+namespace VirtualPets2.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -1501,6 +1501,9 @@ namespace VirtualPets2.Server.Data.Migrations
 
                     b.Property<int>("AnimalId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

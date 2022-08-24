@@ -80,5 +80,20 @@ namespace VirtualPets2.Server.Controllers
                 return BadRequest(0);
             }
         }
+
+        [HttpGet("{userId}/names")]
+        public async Task<List<AnimalEdit>> UserAnimalName(int userId)
+        {
+            var animalNames = await _service.GetAnimalNames(userId);
+            return animalNames.ToList();
+        }
+
+
+        [HttpGet("{userId}/Ids")]
+        public async Task<List<UserAnimalDetails>> UserAnimalId(int userId)
+        {
+            var animalIds = await _service.GetAnimalIds(userId);
+            return animalIds.ToList();
+        }
     }
 }

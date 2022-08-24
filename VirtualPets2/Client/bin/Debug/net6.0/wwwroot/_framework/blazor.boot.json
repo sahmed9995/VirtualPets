@@ -200,15 +200,15 @@
       "mscorlib.dll": "sha256-TYLzIm125RbnX9+RAPqJnwZhd6CnQpJcrjiMpJfZ720=",
       "netstandard.dll": "sha256-HhuK9zDkd1N7hODAEiNJ11VF8T54IgrM6hZfLHmHdqM=",
       "System.Private.CoreLib.dll": "sha256-dXaTqyg1PnXPiSwywpic1PVrd7P8Vb5tN0i0\/urdt3E=",
-      "VirtualPets2.Shared.dll": "sha256-oGAncLdzBTLfhB0lYonB7pogCXGoUyUre\/ByCs1tFI4=",
-      "VirtualPets2.Client.dll": "sha256-z+RQzlWPYyj7Dv9ZFN3NAcwIY7Yez6R1pGPATTbWTG0="
+      "VirtualPets2.Shared.dll": "sha256-S0Bk8TDx1zinp4K8kGeYi5onPZkvsmTjO1Kl+aoB0A4=",
+      "VirtualPets2.Client.dll": "sha256-AKUsihUbF3vsum4YXqWB5323gJibjzoY\/QJh3EM5Ugs="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "VirtualPets2.Shared.pdb": "sha256-HZEEsrMCxhXo66VO3PCol0IkwoC4LB35QvHxA5iD9LA=",
-      "VirtualPets2.Client.pdb": "sha256-k8w0Kd64\/WjlxSV1L1OLDG4TJdchDXcbf9FN1YqYFAg="
+      "VirtualPets2.Shared.pdb": "sha256-+1gMPpGK6Rpi0B9ZirsdGK\/ARwF2FMVVDtu0w8uKaV4=",
+      "VirtualPets2.Client.pdb": "sha256-KD10TKzS3rVJk8xOgVtYx9lFdvF0YQBojDnC8Gjho5A="
     },
     "runtime": {
       "dotnet.6.0.8.4ry4j3s011.js": "sha256-WT60vnXnQtCNURE40qo+XSL1o4iYFvABy0NVaFhm7MI=",

@@ -19,7 +19,10 @@ else
             {
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title">@animal.Name.ToUpper()</h3>
+                        @foreach (var name in animalNames)
+                        {
+                            <h3 class="card-title">@name.Name.ToUpper()</h3>
+                        }
                         <h6>Title: @animal.Title</h6>
                         <h6>Type: @animal.Type</h6>
                         <h6>Dwelling: @animal.Dwelling</h6>
@@ -38,9 +41,12 @@ else
 
     public List<AnimalUserDetails> animals { get; set; } = new List<AnimalUserDetails>();
 
+    public List<AnimalEdit> animalNames { get; set; } = new List<AnimalEdit>();
+
     protected override async Task OnInitializedAsync()
     {
         animals = await http.GetFromJsonAsync<List<AnimalUserDetails>>($"/api/user/{userId}/animals");
+        animalNames = await http.GetFromJsonAsync<List<AnimalEdit>>($"/api/animal/{userId}/names");
     }
 }
 

@@ -10,5 +10,7 @@ namespace VirtualPets2.Server.Services.Animals
         Task<bool> BuyAnimal(int userId, int animalId, UserAnimalCreate model);
         Task<bool> ChangeMoney(int animalId, int userId, UserMoney model);
         Task<bool> ChangeAnimalName(int animalId, AnimalEdit model);
+        Task<List<AnimalEdit>> GetAnimalNames(int userId);
+        Task<List<UserAnimalDetails>> GetAnimalIds(int userId);
     }
 }
