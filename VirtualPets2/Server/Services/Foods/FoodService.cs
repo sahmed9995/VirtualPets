@@ -42,6 +42,48 @@ namespace VirtualPets2.Server.Services.Foods
 
             return numberOfChanges == 1;
         }
+
+        public async Task<bool> BuyFood(int userId, int foodId, UserFoodCreate model)
+        {
+            var food = await _context.Foods
+                .FirstOrDefaultAsync(f => f.Id == foodId);
+
+            if (food == null) return false;
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var userFood = new UserFood
+            {
+                UserId = user.Id,
+                FoodId = food.Id,
+            };
+
+            _context.UserFoods.Add(userFood);
+            return await _context.SaveChangesAsync() == 1;
+        }
+
+        public async Task<bool> ChangeMoneyFood(int foodId, int userId, UserMoney model)
+        {
+            var food = await _context.Foods
+                .FirstOrDefaultAsync(f => f.Id == foodId);
+
+            if (food == null) return false;
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money - food.Price;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
         //public async Task<bool> BuyFood(int foodId)
         //{
         //    var user = await _context.Users

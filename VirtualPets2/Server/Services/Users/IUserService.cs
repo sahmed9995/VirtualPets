@@ -8,7 +8,7 @@ namespace VirtualPets2.Server.Services.Users
         Task<bool> RegisterUserAsync(UserCreate model);
         Task<UserDetails> GetUserAsync();
         Task<List<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId);
-        //Task<IEnumerable<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId);
+        Task<List<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId);
         Task<bool> UpdateUserAsync(UserEdit model);
     }
 }

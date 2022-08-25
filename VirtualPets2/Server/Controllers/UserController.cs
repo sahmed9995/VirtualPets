@@ -47,15 +47,14 @@ namespace VirtualPets2.Server.Controllers
             return animals.ToList();
         }
 
-        //[HttpGet("{id}/foods")]
+        [HttpGet("{id}/foods")]
+        public async Task<IEnumerable<FoodUserDetails>> Foods(int id)
+        {
+            if (!SetUserIdInService()) return new List<FoodUserDetails>();
 
-        //public async Task<IEnumerable<FoodUserDetails>> Foods(int id)
-        //{
-        //    if (!SetUserIdInService()) return new List<FoodUserDetails>();
-
-        //    var foods = await _service.ShowFoodsbyUserIdAsync(id);
-        //    return foods.ToList();
-        //}
+            var foods = await _service.ShowFoodsbyUserIdAsync(id);
+            return foods.ToList();
+        }
 
         [HttpPost]
         public async Task <IActionResult> Create(UserCreate model)

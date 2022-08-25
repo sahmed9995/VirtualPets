@@ -86,6 +86,33 @@ namespace VirtualPets2.Server.Services.Users
             return null;
         }
 
+        public async Task<List<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId)
+        {
+            List<FoodEntity> foodList = new List<FoodEntity>();
+
+            var foods = await _context.UserFoods
+                .Where(u => u.UserId == userId).ToListAsync();
+
+            if (foods != null)
+            {
+                foreach (var food in foods)
+                {
+                    var details = await _context.Foods
+                    .FirstOrDefaultAsync(a => a.Id == food.FoodId);
+
+                    foodList.Add(details);
+                }
+                var userFoods = foodList
+                    .Select(a => new FoodUserDetails
+                    { 
+                        Name = a.Name,
+                        Type = (Kind)a.Type,
+                    });
+                return userFoods.ToList();
+            }
+            return null;
+        }
+
         //public async Task<IEnumerable<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId)
         //{
         //    var user = await _context.Users

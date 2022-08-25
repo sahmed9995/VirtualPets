@@ -55,10 +55,8 @@ else
                         <h3 class="card-title mb-3">@meat.Name.ToUpper()</h3>
                         <h6>Type: @meat.Type</h6>
                         <h6 class="card-text">Price: $@meat.Price</h6>
-                        
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(meat)">Buy</button>
                     </div>
-                    <a href=@($"food/buy/{meat.Id}") class="btn btn-primary">Buy</a>
                 </div>
             </div>
         }
@@ -75,8 +73,7 @@ else
                         <h3 class="card-title mb-3">@plant.Name.ToUpper()</h3>
                         <h6>Type: @plant.Type</h6>
                         <h6 class="card-text">Price: $@plant.Price</h6>
-                        <a href=@($"food/buy/{plant.Id}") class="btn btn-primary">Buy</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(plant)">Buy</button>
                     </div>
                 </div>
             </div>
@@ -95,12 +92,53 @@ else
                         <h6>Type: @d.Type</h6>
                         <h6 class="card-text">Price: $@d.Price</h6>
                         <a href=@($"food/buy/{d.Id}") class="btn btn-primary">Buy</a>
-                        @*<button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Buy</button>*@
+                        <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(d)">Buy</button>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    @if (BuyDialogOpenFail)
+    {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Better Luck Next Time</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Sorry, it looks like you don't have enough money to buy this food!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (BuyDialogOpenSuccess)
+    {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Congratulations!</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your pet is going to love eating this!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
 }
 
 
@@ -109,10 +147,45 @@ else
 @code {
     public UserDetails user;
     public List<FoodDetails> foods;
+    public UserFoodCreate model = new();
+    public UserMoney userMoney = new();
 
     public List<FoodDetails> Meat = new List<FoodDetails>();
     public List<FoodDetails> Plants = new List<FoodDetails>();
     public List<FoodDetails> Dessert = new List<FoodDetails>();
+
+    private FoodDetails _foodToBuy;
+
+    public bool BuyDialogOpenFail { get; set; }
+    public bool BuyDialogOpenSuccess { get; set; }
+
+    private async Task OpenBuyDialog(FoodDetails foodUser)
+    {
+        _foodToBuy = foodUser;
+
+        if (user.Money < _foodToBuy.Price)
+        {
+            BuyDialogOpenFail = true;
+        }
+        else
+        {
+            var updated = await http.PutAsJsonAsync($"/api/food/{user.Id}/buy/{_foodToBuy.Id}", userMoney);
+
+            if (updated.IsSuccessStatusCode)
+            {
+                var response = await http.PostAsJsonAsync($"/api/food/{_foodToBuy.Id}/buy/{user.Id}", model);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    BuyDialogOpenSuccess = true;
+                }
+                else
+                {
+                    BuyDialogOpenFail = true;
+                }
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
