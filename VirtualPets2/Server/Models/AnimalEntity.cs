@@ -9,6 +9,8 @@ namespace VirtualPets2.Server.Models
         public int? UserId { get; set; }
         public virtual UserEntity User { get; set; }
 
+        public int? FoodId { get; set; }
+
         public string Title { get; set; }
         public string? Name { get; set; }
         public string Type { get; set; }

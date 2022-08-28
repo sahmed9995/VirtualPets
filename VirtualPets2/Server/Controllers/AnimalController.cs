@@ -59,7 +59,7 @@ namespace VirtualPets2.Server.Controllers
         public async Task<IActionResult> ChangeUserMoney(int animalId, int userId, UserMoney model)
         {
 
-            bool wasUpdated = await _service.ChangeMoney(animalId, userId, model);
+            bool wasUpdated = await _service.ChangeMoneyToBuyAnimal(animalId, userId, model);
 
             if (wasUpdated) return Ok();
             else
@@ -94,6 +94,84 @@ namespace VirtualPets2.Server.Controllers
         {
             var animalIds = await _service.GetAnimalIds(userId);
             return animalIds.ToList();
+        }
+
+        [HttpPut("{userId}/meat")]
+        public async Task<IActionResult> ChangeUserMoneyMeat(int userId, UserMoney model)
+        {
+
+            bool wasUpdated = await _service.ChangeMoneyToFeedMeatAnimal( userId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
+
+        [HttpPut("{userId}/plants")]
+        public async Task<IActionResult> ChangeUserMoneyPlants(int userId, UserMoney model)
+        {
+
+            bool wasUpdated = await _service.ChangeMoneyToFeedPlantAnimal(userId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
+
+        [HttpPut("{userId}/dessert")]
+        public async Task<IActionResult> ChangeUserMoneyDesserts(int userId, UserMoney model)
+        {
+
+            bool wasUpdated = await _service.ChangeMoneyToFeedAnimal(userId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
+
+        [HttpPut("{userId}/Notplants")]
+        public async Task<IActionResult> LoseUserMoneyPlants(int userId, UserMoney model)
+        {
+
+            bool wasUpdated = await _service.LoseMoneyToFeedAnimalMeat(userId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
+
+        [HttpPut("{userId}/Notmeat")]
+        public async Task<IActionResult> LoseUserMoneyMeat(int userId, UserMoney model)
+        {
+
+            bool wasUpdated = await _service.LoseMoneyToFeedAnimalPlants(userId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
+
+        [HttpPut("{animalId}/foodId")]
+        public async Task<IActionResult> ChangeAnimalFoodId(int animalId, AnimalFoodEdit model)
+        {
+
+            bool wasUpdated = await _service.ChangeAnimalFoodId(animalId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
         }
     }
 }

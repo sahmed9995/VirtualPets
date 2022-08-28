@@ -10,5 +10,6 @@ namespace VirtualPets2.Server.Services.Users
         Task<List<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId);
         Task<List<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId);
         Task<bool> UpdateUserAsync(UserEdit model);
+        Task<bool> DeleteFoodFromUser(int animalId);
     }
 }

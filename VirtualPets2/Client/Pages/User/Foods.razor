@@ -5,14 +5,18 @@
 @attribute [Authorize]
 
 <h3>Your Pantry</h3>
+<a href=@("/user")>Go back to profile page</a>
 
 @if (foods == null)
 {
     <p><em>You don't have any food :( </em></p>
-    <a href=@($"foods")>You can buy food from here!</a>
+    <a href=@($"food")>You can buy food from here!</a>
 }
 else
 {
+
+    <a href=@($"food")>You can buy food from here!</a>
+
     <div class="row">
         <div class="col mx-auto justify-content-between">
             @foreach (var food in foods)
@@ -25,6 +29,7 @@ else
                 </div>
             }
         </div>
+        <a href=@("/user")>Go back to profile page</a>
     </div>
 }
 
@@ -32,7 +37,8 @@ else
     [Parameter]
     public int userId { get; set; }
 
-    public List<FoodUserDetails> foods { get; set; } = new List<FoodUserDetails>();
+    public List<FoodUserDetails> foods;
+
 
     protected override async Task OnInitializedAsync()
     {

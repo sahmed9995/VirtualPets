@@ -3,8 +3,10 @@
 @using Microsoft.AspNetCore.Authorization
 @inject HttpClient http
 @attribute [Authorize]
+@inject NavigationManager navigation
 
 <h3>Your Animals</h3>
+<a href=@("/user")>Go back to profile page</a>
 
 @if (animals == null)
 {
@@ -21,7 +23,16 @@ else
                     <div class="card-body">
                         @foreach (var name in animalNames)
                         {
-                            <h3 class="card-title">@name.Name.ToUpper()</h3>
+                            if (i < animalNames.Count())
+                            {
+                                <h3 class="card-title">@animalNames[i].Name.ToUpper()</h3>
+                                i++;
+                                break;
+                            }
+                            else
+                            {
+                                i = 0;
+                            }
                         }
                         <h6>Title: @animal.Title</h6>
                         <h6>Type: @animal.Type</h6>
@@ -29,25 +40,395 @@ else
                         <h6>Diet: @animal.Diet</h6>
                     </div>
                     <a href="animal/{animalId}/name">Change your pet's name</a>
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Feed</button>
                 </div>
             }
          </div>
+         <a href=@("/user")>Go back to profile page</a>
      </div>
+
+     if (NoFoodDialog)
+     {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sorry you can't feed your pet!</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>It looks like you don't have any food!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/food")>Click here to buy food</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (FoodDialog)
+     {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">What would you like to feed your pet?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <EditForm Model="@AnimalFood" OnValidSubmit="@HandleSubmit">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                <div class="form-group">
+                                    <label>Food</label>
+                                    <InputSelect class="form-control" @bind-Value="AnimalFood.FoodId">
+                                        @foreach (var food in foods)
+                                        {
+                                            <option value="@food.Id">@food.Name</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+                            </EditForm>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (EatMeatDialog)
+     {
+         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Your pet loved that @_foodtoDelete.Name!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>You get $35!!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (EatPlantsDialog)
+     {
+         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Your pet loved that @_foodtoDelete.Name!</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You get $15!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (EatDessertDialog)
+     {
+         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Your pet loved that @_foodtoDelete.Name!!</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>It looks like you don't have any food!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (NotPlantsDialog)
+     {
+         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Your pet did not like that!</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Minus $35!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (NotMeatDialog)
+     {
+         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Your pet did not like that!</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Minus $50!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href=@("/user")>Click here to go back to your profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+     }
+
+     if (FailDialog)
+     {
+        <FoodModal Title="Sorry you can't feed your pet at this time!" Text="Please try again later!"></FoodModal>
+     }
 }
 
 @code {
     [Parameter]
     public int userId { get; set; }
+    int i = 0;
+
+    public UserDetails user;
+    public UserMoney userMoney = new();
+    public AnimalUserDetails model = new();
+    public AnimalFoodEdit AnimalFood = new();
+
+    private AnimalUserDetails _animaltoFeed;
 
     public List<AnimalUserDetails> animals { get; set; } = new List<AnimalUserDetails>();
 
     public List<AnimalEdit> animalNames { get; set; } = new List<AnimalEdit>();
 
+    public List<FoodUserDetails> foods { get; set; } = new List<FoodUserDetails>();
+
+    public FoodDetails _foodtoDelete;
+
+    public bool NoFoodDialog { get; set; }
+    public bool FoodDialog { get; set; }
+    public bool EatMeatDialog { get; set; }
+    public bool EatPlantsDialog { get; set; }
+    public bool EatDessertDialog { get; set; }
+    public bool FailDialog { get; set; }
+    public bool NotPlantsDialog { get; set; }
+    public bool NotMeatDialog { get; set; }
+
+
     protected override async Task OnInitializedAsync()
     {
         animals = await http.GetFromJsonAsync<List<AnimalUserDetails>>($"/api/user/{userId}/animals");
         animalNames = await http.GetFromJsonAsync<List<AnimalEdit>>($"/api/animal/{userId}/names");
+        foods = await http.GetFromJsonAsync<List<FoodUserDetails>>($"/api/user/{userId}/foods");
+        user = await http.GetFromJsonAsync<UserDetails>("/api/user");
     }
+
+    private async Task OpenBuyDialog(AnimalUserDetails aniUser)
+    {
+        _animaltoFeed = aniUser;
+
+        if (foods == null)
+        {
+            NoFoodDialog = true;
+        }
+        else
+        {
+            FoodDialog = true;
+            //navigation.NavigateTo($"/api/food/{food")
+        }
+    }
+
+    private async void HandleSubmit()
+    {
+
+        var updated = await http.PutAsJsonAsync($"/api/animal/{_animaltoFeed.Id}/foodId", AnimalFood);
+        if (updated.IsSuccessStatusCode)
+        {
+            int j = 0;
+            var _foodtoDelete = await http.GetFromJsonAsync<FoodDetails>($"/api/food/{_animaltoFeed.Id}/details");
+            j = 2;
+
+            if (j == 2)
+            {
+                if (_foodtoDelete.Type == Kind.Meat && _animaltoFeed.Diet == Food.Carnivore)
+                {
+                    var moneyChanged = await http.PutAsJsonAsync($"/api/animal/{user.Id}/meat", userMoney);
+
+                    if (moneyChanged.IsSuccessStatusCode)
+                    {
+                        var deleteRes = await http.DeleteAsync($"/api/user/{_animaltoFeed.Id}");
+
+                        if (deleteRes.IsSuccessStatusCode)
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            EatMeatDialog = true;
+                        }
+                        else
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            FailDialog = true;
+                        }
+                    }
+                }
+                else if (_foodtoDelete.Type == Kind.Plants && _animaltoFeed.Diet == Food.Herbivore)
+                {
+                    var money = await http.PutAsJsonAsync($"/api/animal/{user.Id}/plants", userMoney);
+
+                    if (money.IsSuccessStatusCode)
+                    {
+                        var deleteRes = await http.DeleteAsync($"/api/user/{_animaltoFeed.Id}");
+
+                        if (deleteRes.IsSuccessStatusCode)
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            EatPlantsDialog = true;
+                        }
+                        else
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            FailDialog = true;
+                        }
+                    }
+                }
+                else if (_foodtoDelete.Type == Kind.Meat && _animaltoFeed.Diet == Food.Herbivore)
+                {
+                    var moneyLost = await http.PutAsJsonAsync($"/api/animal/{user.Id}/Notplants", userMoney);
+
+                    if (moneyLost.IsSuccessStatusCode)
+                    {
+                        var deleteRes = await http.DeleteAsync($"/api/user/{_animaltoFeed.Id}");
+
+                        if (deleteRes.IsSuccessStatusCode)
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            NotPlantsDialog = true;
+                        }
+                        else
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            FailDialog = true;
+                        }
+                    }
+                }
+                else if (_foodtoDelete.Type == Kind.Plants && _animaltoFeed.Diet == Food.Carnivore)
+                {
+                    var LoseMoney = await http.PutAsJsonAsync($"/api/animal/{user.Id}/Notmeat", userMoney);
+
+                    if (LoseMoney.IsSuccessStatusCode)
+                    {
+                        var deleteRes = await http.DeleteAsync($"/api/user/{_animaltoFeed.Id}");
+
+                        if (deleteRes.IsSuccessStatusCode)
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            NotMeatDialog = true;
+                        }
+                        else
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            FailDialog = true;
+                        }
+                    }
+                }
+                else if (_foodtoDelete.Type == Kind.Dessert)
+                {
+                    var moreMoney = await http.PutAsJsonAsync($"/api/animal/{user.Id}/dessert", userMoney);
+
+                    if (moreMoney.IsSuccessStatusCode)
+                    {
+                        var deleteRes = await http.DeleteAsync($"/api/user/{_animaltoFeed.Id}");
+
+                        if (deleteRes.IsSuccessStatusCode)
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            EatDessertDialog = true;
+                        }
+                        else
+                        {
+                            FoodDialog = false;
+                            navigation.NavigateTo($"/user/{user.Id}/animals");
+                            FailDialog = true;
+                        }
+                    }
+                }
+            }
+        }
+        else 
+        {
+            FoodDialog = false;
+            navigation.NavigateTo($"/user/{user.Id}/animals");
+            FailDialog = true;
+        }
+    }
+    
+    //    else if (_foodtoDelete.Type == Kind.Plants && _animaltoFeed.Diet == Food.Herbivore)
+    //    {
+    //        var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/plants", userMoney);
+
+    //        if (updated.IsSuccessStatusCode)
+    //        {
+    //            var deleteRes = await http.DeleteAsync($"/api/food/{foodId}");
+
+    //            if (deleteRes.IsSuccessStatusCode)
+    //            {
+    //                EatPlantsDialog = true;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            FailDialog = true;
+    //        }
+    //    }
+    //    else if (_foodtoDelete.Type == Kind.Dessert)
+    //    {
+    //        var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/dessert", userMoney);
+
+    //        if (updated.IsSuccessStatusCode)
+    //        {
+    //            var deleteRes = await http.DeleteAsync($"/api/food/{foodId}");
+
+    //            if (deleteRes.IsSuccessStatusCode)
+    //            {
+    //                EatDessertDialog = true;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            FailDialog = true;
+    //        }
+    //    }
+
+    //}
 }
+
 
 

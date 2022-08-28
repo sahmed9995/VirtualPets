@@ -54,6 +54,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9vZHNcQ3JlYXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Foods/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9vZHNcRGVsZXRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Foods/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9vZHNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -72,6 +76,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/User/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/User/FoodModal.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxGb29kTW9kYWwucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/User/Foods.razor]

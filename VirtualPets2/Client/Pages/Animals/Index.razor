@@ -260,17 +260,15 @@ else
         }
         else
         {
-            var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/buy/{_animalToBuy.Id}", userMoney);
+            var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
 
-            if (updated.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                var response = await http.PostAsJsonAsync($"/api/animal/{_animalToBuy.Id}/buy/{user.Id}", model);
+                NameDialog = true;
 
-                if (response.IsSuccessStatusCode)
-                {
-                    NameDialog = true;
-                }
-                else
+                var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/buy/{_animalToBuy.Id}", userMoney);
+
+                if (!updated.IsSuccessStatusCode)
                 {
                     BuyDialogOpenFail = true;
                 }

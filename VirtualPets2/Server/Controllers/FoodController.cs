@@ -62,6 +62,13 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        [HttpGet("{animalId}/details")]
+        public async Task<FoodDetails> GetFoodDetails(int animalId)
+        {
+            var food = await _service.GetFoodDetails(animalId);
+            return food;
+        }
+
 
     }
 }

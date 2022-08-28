@@ -82,5 +82,17 @@ namespace VirtualPets2.Server.Controllers
                 return BadRequest(0);
             }
         }
+
+        [HttpDelete("{foodId}")]
+        public async Task<IActionResult> Delete(int foodId)
+        {
+            bool deleted = await _service.DeleteFoodFromUser(foodId);
+
+            if (deleted) return Ok();
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

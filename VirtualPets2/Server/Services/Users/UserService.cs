@@ -75,6 +75,8 @@ namespace VirtualPets2.Server.Services.Users
                 var userAnimals = animalList
                     .Select(a => new AnimalUserDetails
                     {
+                        Id = a.Id,
+                        FoodId = a.FoodId,
                         Title = a.Title,
                         Name = a.Name,
                         Type = a.Type,
@@ -105,12 +107,32 @@ namespace VirtualPets2.Server.Services.Users
                 var userFoods = foodList
                     .Select(a => new FoodUserDetails
                     { 
+                        Id = a.Id,
                         Name = a.Name,
                         Type = (Kind)a.Type,
                     });
                 return userFoods.ToList();
             }
-            return null;
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteFoodFromUser(int animalId)
+        {
+            var animal = await _context.Animals
+                .FindAsync(animalId);
+
+            if (animal == null) return false;
+
+            var food = await _context.UserFoods
+                .FirstOrDefaultAsync(f => f.FoodId == animal.FoodId);
+
+            if (food == null) return false;
+
+            _context.UserFoods.Remove(food);
+            return await _context.SaveChangesAsync() == 1;
         }
 
         //public async Task<IEnumerable<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId)

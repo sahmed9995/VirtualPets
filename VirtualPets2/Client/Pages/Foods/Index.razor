@@ -91,7 +91,6 @@ else
                         <h3 class="card-title mb-3">@d.Name.ToUpper()</h3>
                         <h6>Type: @d.Type</h6>
                         <h6 class="card-text">Price: $@d.Price</h6>
-                        <a href=@($"food/buy/{d.Id}") class="btn btn-primary">Buy</a>
                         <button type="button" class="btn btn-primary btn-sm" @onclick="()=>OpenBuyDialog(d)">Buy</button>
                     </div>
                 </div>
@@ -169,13 +168,13 @@ else
         }
         else
         {
-            var updated = await http.PutAsJsonAsync($"/api/food/{user.Id}/buy/{_foodToBuy.Id}", userMoney);
+            var response = await http.PostAsJsonAsync($"/api/food/{_foodToBuy.Id}/buy/{user.Id}", model);
 
-            if (updated.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                var response = await http.PostAsJsonAsync($"/api/food/{_foodToBuy.Id}/buy/{user.Id}", model);
+                var updated = await http.PutAsJsonAsync($"/api/food/{user.Id}/buy/{_foodToBuy.Id}", userMoney);
 
-                if (response.IsSuccessStatusCode)
+                if (updated.IsSuccessStatusCode)
                 {
                     BuyDialogOpenSuccess = true;
                 }
@@ -183,6 +182,10 @@ else
                 {
                     BuyDialogOpenFail = true;
                 }
+            }
+            else
+            {
+                BuyDialogOpenFail = true;
             }
         }
     }

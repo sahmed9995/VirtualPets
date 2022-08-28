@@ -82,7 +82,7 @@ namespace VirtualPets2.Server.Services.Animals
             return await _context.SaveChangesAsync() == 1;
         }
 
-        public async Task<bool> ChangeMoney(int animalId, int userId, UserMoney model)
+        public async Task<bool> ChangeMoneyToBuyAnimal(int animalId, int userId, UserMoney model)
         {
             var animal = await _context.Animals
                 .FirstOrDefaultAsync(a => a.Id == animalId);
@@ -135,6 +135,101 @@ namespace VirtualPets2.Server.Services.Animals
                 });
             return await animalIds.ToListAsync();
 
+        }
+
+        public async Task<bool> ChangeMoneyToFeedMeatAnimal(int userId, UserMoney model)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money + 35;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
+        public async Task<bool> ChangeMoneyToFeedPlantAnimal(int userId, UserMoney model)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money + 15;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
+        public async Task<bool> ChangeMoneyToFeedAnimal(int userId, UserMoney model)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money + 50;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
+        public async Task<bool> LoseMoneyToFeedAnimalMeat(int userId, UserMoney model)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money - 35;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
+        public async Task<bool> LoseMoneyToFeedAnimalPlants(int userId, UserMoney model)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            if (user == null) return false;
+
+            var money = user.Money - 50;
+
+            user.Money = money;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
+        public async Task<bool> ChangeAnimalFoodId(int animalId, AnimalFoodEdit model)
+        {
+            var animal = await _context.Animals
+                .FirstOrDefaultAsync(u => u.Id == animalId);
+
+            if (animal == null) return false;
+
+            if (animal.FoodId == model.FoodId)
+            {
+                return true;
+            }
+            else
+            {
+                animal.FoodId = model.FoodId;
+
+                var numberOfChanges = await _context.SaveChangesAsync();
+                return numberOfChanges == 1;
+            }
         }
 
 
@@ -190,6 +285,6 @@ namespace VirtualPets2.Server.Services.Animals
         //        return true;
         //    }
 
-        
+
     }
 }

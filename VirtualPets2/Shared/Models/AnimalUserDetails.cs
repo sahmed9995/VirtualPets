@@ -8,8 +8,10 @@ namespace VirtualPets2.Shared.Models
 {
     public class AnimalUserDetails
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string? Name { get; set; }
+        public int? FoodId { get; set; }
         public string Type { get; set; }
         public string Dwelling { get; set; }
         public Food Diet { get; set; }
