@@ -28,6 +28,20 @@ namespace VirtualPets2.Server.Services.Animals
             return await animals.ToListAsync();
         }
 
+        public async Task<List<AnimalDetails>> GetAllAnimalDetailsAsync()
+        {
+            var animals = _context.Animals
+                .Select(a => new AnimalDetails
+                {
+                    Title = a.Title,
+                    Price = a.Price,
+                    Type = a.Type,
+                    Dwelling = a.Dwelling,
+                    Diet = (Food)a.Diet
+                });
+            return await animals.ToListAsync();
+        }
+
         public async Task<AnimalDetails> GetAnimalAsync(int id)
         {
             var animal = await _context.Animals
@@ -226,6 +240,26 @@ namespace VirtualPets2.Server.Services.Animals
             else
             {
                 animal.FoodId = model.FoodId;
+
+                var numberOfChanges = await _context.SaveChangesAsync();
+                return numberOfChanges == 1;
+            }
+        }
+
+        public async Task<bool> ChangeAnimalSerivceId(int animalId, AnimalServiceEdit model)
+        {
+            var animal = await _context.Animals
+                .FirstOrDefaultAsync(u => u.Id == animalId);
+
+            if (animal == null) return false;
+
+            if (animal.ServiceId == model.ServiceId)
+            {
+                return true;
+            }
+            else
+            {
+                animal.ServiceId = model.ServiceId;
 
                 var numberOfChanges = await _context.SaveChangesAsync();
                 return numberOfChanges == 1;

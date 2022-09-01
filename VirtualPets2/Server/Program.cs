@@ -5,6 +5,7 @@ using VirtualPets2.Server.Data;
 using VirtualPets2.Server.Models;
 using VirtualPets2.Server.Services.Animals;
 using VirtualPets2.Server.Services.Foods;
+using VirtualPets2.Server.Services.Services;
 using VirtualPets2.Server.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 
 builder.Services.AddScoped<IFoodService, FoodService>();
+
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

@@ -15,17 +15,6 @@
 }
 else
 {
-    @*<h5>Search By:</h5>
-    <div class="col mx-auto justify-content-between">
-        <button><a href=@("animal/price")>Price</a></button>
-        <button><a href=@("animal/type")>Animal Type</a></button>
-
-        <button><a href=@("animal/dwelling")>Animal Habitat</a></button>
-
-        <button href=@("animal/diet")>Animal Diet</button>
-
-    </div>*@
-
     <a href=@("/food/create")>Create a new Food</a>
 
     @foreach (var food in foods)
@@ -105,7 +94,7 @@ else
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Better Luck Next Time</h4>
-                        <button type="button" class="close">&times;</button>
+                        <button type="button" class="close" @onclick="() => OnBuyDialogClose(true)">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p>Sorry, it looks like you don't have enough money to buy this food!</p>
@@ -125,7 +114,7 @@ else
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Congratulations!</h4>
-                        <button type="button" class="close">&times;</button>
+                        <button type="button" class="close" @onclick="() => OnBuyDialogClose(true)">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p>Your pet is going to love eating this!</p>
@@ -157,6 +146,13 @@ else
 
     public bool BuyDialogOpenFail { get; set; }
     public bool BuyDialogOpenSuccess { get; set; }
+
+    private async Task OnBuyDialogClose(bool accepted)
+    {
+        BuyDialogOpenFail = false;
+        BuyDialogOpenSuccess = false;
+        StateHasChanged();
+    }
 
     private async Task OpenBuyDialog(FoodDetails foodUser)
     {

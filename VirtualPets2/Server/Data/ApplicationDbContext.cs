@@ -21,10 +21,6 @@ namespace VirtualPets2.Server.Data
         public DbSet<UserFood> UserFoods { get; set; }
         public DbSet<UserAnimal> UserAnimals { get; set; }
 
- /*       public DbSet<CarnivoreEntity> Meat { get; set; }
-        public DbSet<HerbivoreEntity> Plants { get; set; }
-        public DbSet<DessertivoreEntity> Sweets { get; set; }*/
-
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,7 +73,8 @@ namespace VirtualPets2.Server.Data
                 new AnimalEntity { Id = 42, Title = "Giraffe", Type = "Mammal", Price = 550.45, Dwelling = "Savannah", Diet = 1 },
                 new AnimalEntity { Id = 43, Title = "Flying Squirrel", Type = "Mammal", Price = 550.45, Dwelling = "Forest", Diet = 1 },
                 new AnimalEntity { Id = 44, Title = "Buffalo", Type = "Mammal", Price = 950.45, Dwelling = "Grasslands/Forest/Savannahs", Diet = 1 },
-                new AnimalEntity { Id = 45, Title = "Yak", Type = "Mammal", Price = 1000.45, Dwelling = "Tundra", Diet = 1 });
+                new AnimalEntity { Id = 45, Title = "Yak", Type = "Mammal", Price = 1000.45, Dwelling = "Tundra", Diet = 1 },
+                new AnimalEntity { Id = 46, Title = "Snow Leopard", Type = "Feline", Price = 750.45, Dwelling = "Tundra", Diet = 0 });
 
             modelBuilder.Entity<FoodEntity>()
                 .HasData(
@@ -172,7 +169,21 @@ namespace VirtualPets2.Server.Data
                 new FoodEntity { Id = 89, Name = "Anchovies", Price = 5, Type = 0 },
                 new FoodEntity { Id = 90, Name = "Nutella", Price = 5, Type = 2 });
 
-
+            modelBuilder.Entity<ServiceEntity>()
+                .HasData(
+                new ServiceEntity { Id = 1, Task = "Bathe your pet", Money = 45 },
+                new ServiceEntity { Id = 2, Task = "Play with your pet", Money = 50},
+                new ServiceEntity { Id = 3, Task = "Groom your pet", Money = 15},
+                new ServiceEntity { Id = 4, Task = "Cuddle with your pet", Money = 30},
+                new ServiceEntity { Id = 5, Task = "Take your pet on a walk", Money = 25},
+                new ServiceEntity { Id = 6, Task = "Take your pet to the park", Money = 20},
+                new ServiceEntity { Id = 7, Task = "Take your pet on a playdate", Money = 35},
+                new ServiceEntity { Id = 8, Task = "Buy your pet clothes", Money = 10},
+                new ServiceEntity { Id = 9, Task = "Give your pet scritches", Money = 5},
+                new ServiceEntity { Id = 10, Task = "Give your pet treats", Money = 40},
+                new ServiceEntity { Id = 11, Task = "Teach your pet a new trick", Money = 55},
+                new ServiceEntity { Id = 12, Task = "Take your pet to the vet", Money = 15},
+                new ServiceEntity { Id = 13, Task = "Give your pet a spa day", Money = 30});
         }
     }
 }

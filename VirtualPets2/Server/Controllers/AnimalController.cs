@@ -23,6 +23,13 @@ namespace VirtualPets2.Server.Controllers
             return animals.ToList();
         }
 
+        [HttpGet("details")]
+        public async Task<List<AnimalDetails>> GetAnimalDetails()
+        {
+            var animals = await _service.GetAllAnimalDetailsAsync();
+            return animals.ToList();
+        }
+
         [HttpGet("{id}")]
         public async Task<AnimalDetails> Details(int id)
         {
@@ -166,6 +173,19 @@ namespace VirtualPets2.Server.Controllers
         {
 
             bool wasUpdated = await _service.ChangeAnimalFoodId(animalId, model);
+
+            if (wasUpdated) return Ok();
+            else
+            {
+                return BadRequest(0);
+            }
+        }
+
+        [HttpPut("{animalId}/serviceId")]
+        public async Task<IActionResult> ChangeAnimalServiceId(int animalId, AnimalServiceEdit model)
+        {
+
+            bool wasUpdated = await _service.ChangeAnimalSerivceId(animalId, model);
 
             if (wasUpdated) return Ok();
             else

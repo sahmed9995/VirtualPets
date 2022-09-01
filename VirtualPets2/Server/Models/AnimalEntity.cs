@@ -11,6 +11,8 @@ namespace VirtualPets2.Server.Models
 
         public int? FoodId { get; set; }
 
+        public int? ServiceId { get; set; }
+
         public string Title { get; set; }
         public string? Name { get; set; }
         public string Type { get; set; }

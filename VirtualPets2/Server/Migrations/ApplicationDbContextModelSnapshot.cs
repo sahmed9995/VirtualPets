@@ -324,6 +324,9 @@ namespace VirtualPets2.Server.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -746,6 +749,15 @@ namespace VirtualPets2.Server.Migrations
                             Price = 1000.45,
                             Title = "Yak",
                             Type = "Mammal"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Diet = 0,
+                            Dwelling = "Tundra",
+                            Price = 750.45000000000005,
+                            Title = "Snow Leopard",
+                            Type = "Feline"
                         });
                 });
 
@@ -1477,21 +1489,96 @@ namespace VirtualPets2.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<double>("Money")
-                        .HasColumnType("float");
+                    b.Property<int>("Money")
+                        .HasColumnType("int");
 
                     b.Property<string>("Task")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Services");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Money = 45,
+                            Task = "Bathe your pet"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Money = 50,
+                            Task = "Play with your pet"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Money = 15,
+                            Task = "Groom your pet"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Money = 30,
+                            Task = "Cuddle with your pet"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Money = 25,
+                            Task = "Take your pet on a walk"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Money = 20,
+                            Task = "Take your pet to the park"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Money = 35,
+                            Task = "Take your pet on a playdate"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Money = 10,
+                            Task = "Buy your pet clothes"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Money = 5,
+                            Task = "Give your pet scritches"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Money = 40,
+                            Task = "Give your pet treats"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Money = 55,
+                            Task = "Teach your pet a new trick"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Money = 15,
+                            Task = "Take your pet to the vet"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Money = 30,
+                            Task = "Give your pet a spa day"
+                        });
                 });
 
             modelBuilder.Entity("VirtualPets2.Server.Models.UserAnimal", b =>
@@ -1631,17 +1718,6 @@ namespace VirtualPets2.Server.Migrations
                     b.HasOne("VirtualPets2.Server.Models.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("VirtualPets2.Server.Models.ServiceEntity", b =>
-                {
-                    b.HasOne("VirtualPets2.Server.Models.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

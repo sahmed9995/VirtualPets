@@ -40,32 +40,13 @@ else
                         <h6>Diet: @animal.Diet</h6>
                     </div>
                     <a href="animal/{animalId}/name">Change your pet's name</a>
-                    <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenBuyDialog(animal)">Feed</button>
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenFoodDialog(animal)">Feed</button>
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenServiceDialog(animal)">Take Care of your Pet</button>
                 </div>
             }
          </div>
          <a href=@("/user")>Go back to profile page</a>
      </div>
-
-     if (NoFoodDialog)
-     {
-        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Sorry you can't feed your pet!</h4>
-                        <button type="button" class="close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>It looks like you don't have any food!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href=@("/food")>Click here to buy food</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-     }
 
      if (FoodDialog)
      {
@@ -74,6 +55,7 @@ else
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">What would you like to feed your pet?</h4>
+                        <button type="button" class="close" @onclick="() => OnFoodDialogClose(true)">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="container">
@@ -98,110 +80,171 @@ else
                 </div>
             </div>
         </div>
-     }
+    }
 
-     if (EatMeatDialog)
-     {
-         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Your pet loved that @_foodtoDelete.Name!</h4>
+    if (ServiceDialog)
+    {
+        <div class="col-md-3 mb-2">
+            <h4>Choose from the following:</h4>
+            <div class="container">
+                <EditForm Model="@AnimalService" OnValidSubmit="@HandleServiceSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label>Tasks</label>
+                        <InputSelect class="form-control" @bind-Value="AnimalService.ServiceId">
+                            @foreach (var service in services)
+                            {
+                                <option value="@service.Id">@service.Task</option>
+                            }
+                        </InputSelect>
                     </div>
-                    <div class="modal-body">
-                        <p>You get $35!!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href=@("/user")>Click here to go back to your profile</a>
-                    </div>
-                </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+                </EditForm>
             </div>
         </div>
-     }
+
+        <Services></Services>
+    }
+
+    if (EatMeatDialog)
+    {
+       <FoodModal Title="Your pet loved that!"
+           Text="You get $35!"
+           OnClose="@OnDialogsClose">
+       </FoodModal>
+    }
 
      if (EatPlantsDialog)
      {
-         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Your pet loved that @_foodtoDelete.Name!</h4>
-                        <button type="button" class="close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>You get $15!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href=@("/user")>Click here to go back to your profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FoodModal Title="Your pet loved that!"
+           Text="You get $15!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
      }
 
      if (EatDessertDialog)
      {
-         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Your pet loved that @_foodtoDelete.Name!!</h4>
-                        <button type="button" class="close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>It looks like you don't have any food!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href=@("/user")>Click here to go back to your profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FoodModal Title="Your pet loved that!"
+           Text="You get $50!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
      }
 
      if (NotPlantsDialog)
      {
-         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Your pet did not like that!</h4>
-                        <button type="button" class="close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Minus $35!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href=@("/user")>Click here to go back to your profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FoodModal Title="Your pet did not like that!"
+           Text="Minus $35!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
      }
 
      if (NotMeatDialog)
      {
-         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Your pet did not like that!</h4>
-                        <button type="button" class="close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Minus $50!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href=@("/user")>Click here to go back to your profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FoodModal Title="Your pet did not like that!"
+           Text="Minus $50!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
      }
 
      if (FailDialog)
      {
-        <FoodModal Title="Sorry you can't feed your pet at this time!" Text="Please try again later!"></FoodModal>
+        <FoodModal Title="Sorry you can't feed your pet at this time!" 
+            Text="Please try again later!" 
+            OnClose="OnDialogsClose">
+        </FoodModal>
+     }
+
+    if (Bath)
+    {
+        <FoodModal Title="Your pet had so much fun splishing and splashing with all the bubbles"
+           Text="You get $45!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+    }
+    if (Play)
+    {
+        <FoodModal Title="Your pet loved spending time with you!"
+           Text=" You get $50!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+    }
+    if (Groomers)
+     {
+        <FoodModal Title="Your pet was scared of the scissors, but is all nice and clean now!"
+           Text="You get $15!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Cuddle)
+     {
+        <FoodModal Title="Your pet loved being close to you!"
+           Text="You get $30!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Walk)
+     {
+        <FoodModal Title="Your pet loved prancing around in the great outdoors!"
+           Text="You get $25!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Park)
+     {
+        <FoodModal Title="Your pet loved meeting all of their friends at the park!"
+           Text="You get $20!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Playdate)
+     {
+        <FoodModal Title="Your pet loved meeting up and playing with their bestie!"
+           Text="You get $35!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+    if (Clothes)
+    {
+        <FoodModal Title="Your pet looks stylish in their new clothes, but they are itchy!"
+           Text="You get $10!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+    }
+    if (Pet)
+    {
+        <FoodModal Title="Your pet loves getting pet!"
+           Text="You get $5!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+    }
+     if (Treat)
+     {
+        <FoodModal Title="Your pet loves treats and wants some more!"
+           Text="You get $40!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Trick)
+     {
+        <FoodModal Title="Your pet loved learning that new trick, especially because of all the treats that they got!"
+           Text="You get $55!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Vet)
+     {
+        <FoodModal Title="Your pet was very scared to go the vet, but now they are happpy and healthy!"
+           Text="You get $15!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
+     }
+     if (Spa)
+     {
+        <FoodModal Title="Your pet loves getting pampered!"
+           Text="You get $30!"
+           OnClose="@OnDialogsClose">
+        </FoodModal>
      }
 }
 
@@ -214,6 +257,16 @@ else
     public UserMoney userMoney = new();
     public AnimalUserDetails model = new();
     public AnimalFoodEdit AnimalFood = new();
+    public AnimalServiceEdit AnimalService = new();
+    public List<ServiceDetails> services { get; set; } = new List<ServiceDetails>();
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
 
     private AnimalUserDetails _animaltoFeed;
 
@@ -225,14 +278,57 @@ else
 
     public FoodDetails _foodtoDelete;
 
-    public bool NoFoodDialog { get; set; }
     public bool FoodDialog { get; set; }
+    public bool ServiceDialog { get; set; }
     public bool EatMeatDialog { get; set; }
     public bool EatPlantsDialog { get; set; }
     public bool EatDessertDialog { get; set; }
     public bool FailDialog { get; set; }
     public bool NotPlantsDialog { get; set; }
     public bool NotMeatDialog { get; set; }
+    public bool Bath { get; set; }
+    public bool Walk { get; set; }
+    public bool Park { get; set; }
+    public bool Play { get; set; }
+    public bool Spa { get; set; }
+    public bool Vet { get; set; }
+    public bool Playdate { get; set; }
+    public bool Groomers { get; set; }
+    public bool Trick { get; set; }
+    public bool Treat { get; set; }
+    public bool Pet { get; set; }
+    public bool Clothes { get; set; }
+    public bool Cuddle { get; set; }
+
+    private async Task OnFoodDialogClose(bool accepted)
+    {
+        FoodDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task OnDialogsClose(bool accepted)
+    {
+        EatMeatDialog = false;
+        EatDessertDialog = false;
+        EatPlantsDialog = false;
+        FailDialog = false;
+        NotPlantsDialog = false;
+        NotMeatDialog = false;
+        Bath = false;
+        Walk = false;
+        Park = false;
+        Play = false;
+        Spa = false;
+        Vet = false;
+        Playdate = false;
+        Groomers = false;
+        Trick = false;
+        Treat = false;
+        Pet = false;
+        Clothes = false;
+        Cuddle = false;
+        StateHasChanged();
+    }
 
 
     protected override async Task OnInitializedAsync()
@@ -241,25 +337,115 @@ else
         animalNames = await http.GetFromJsonAsync<List<AnimalEdit>>($"/api/animal/{userId}/names");
         foods = await http.GetFromJsonAsync<List<FoodUserDetails>>($"/api/user/{userId}/foods");
         user = await http.GetFromJsonAsync<UserDetails>("/api/user");
+        services = await http.GetFromJsonAsync<List<ServiceDetails>>("/api/service");
     }
 
-    private async Task OpenBuyDialog(AnimalUserDetails aniUser)
+    private async Task OpenFoodDialog(AnimalUserDetails aniUser)
     {
         _animaltoFeed = aniUser;
 
-        if (foods == null)
-        {
-            NoFoodDialog = true;
-        }
-        else
-        {
-            FoodDialog = true;
-            //navigation.NavigateTo($"/api/food/{food")
-        }
+        FoodDialog = true;
+        StateHasChanged();
     }
 
+    private async Task OpenServiceDialog(AnimalUserDetails aniUser)
+    {
+        _animaltoFeed = aniUser;
+
+        ServiceDialog = true;
+        StateHasChanged();
+    }
+
+    private async void HandleServiceSubmit()
+    {
+        ServiceDialog = false;
+        StateHasChanged();
+
+        var updated = await http.PutAsJsonAsync($"/api/animal/{_animaltoFeed.Id}/serviceId", AnimalService);
+        if (updated.IsSuccessStatusCode)
+        {
+            int x = 0;
+            var changed = await http.PutAsJsonAsync($"/api/service/{_animaltoFeed.Id}/user/{user.Id}", userMoney);
+            if (changed.IsSuccessStatusCode)
+            {
+                var animalServiceId = await http.GetFromJsonAsync<AnimalServiceEdit>($"/api/service/{_animaltoFeed.Id}");
+                x = 4;
+                if (x == 4)
+                {
+                    if (animalServiceId.ServiceId == 1)
+                    {
+                        Bath = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 2)
+                    {
+                        Play = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 3)
+                    {
+                        Groomers = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 4)
+                    {
+                        Cuddle = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 5)
+                    {
+                        Walk = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 6)
+                    {
+                        Park = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 7)
+                    {
+                        Playdate = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 8)
+                    {
+                        Clothes = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 9)
+                    {
+                        Pet = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 10)
+                    {
+                        Treat = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 11)
+                    {
+                        Trick = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 12)
+                    {
+                        Vet = true;
+                        StateHasChanged();
+                    }
+                    else if (animalServiceId.ServiceId == 13)
+                    {
+                        Spa = true;
+                        StateHasChanged();
+                    }
+                }
+            }
+        }
+
+    }
     private async void HandleSubmit()
     {
+        FoodDialog = false;
+        StateHasChanged();
 
         var updated = await http.PutAsJsonAsync($"/api/animal/{_animaltoFeed.Id}/foodId", AnimalFood);
         if (updated.IsSuccessStatusCode)
@@ -280,9 +466,8 @@ else
 
                         if (deleteRes.IsSuccessStatusCode)
                         {
-                            FoodDialog = false;
-                            navigation.NavigateTo($"/user/{user.Id}/animals");
                             EatMeatDialog = true;
+                            StateHasChanged();
                         }
                         else
                         {
@@ -302,9 +487,8 @@ else
 
                         if (deleteRes.IsSuccessStatusCode)
                         {
-                            FoodDialog = false;
-                            navigation.NavigateTo($"/user/{user.Id}/animals");
                             EatPlantsDialog = true;
+                            StateHasChanged();
                         }
                         else
                         {
@@ -324,9 +508,8 @@ else
 
                         if (deleteRes.IsSuccessStatusCode)
                         {
-                            FoodDialog = false;
-                            navigation.NavigateTo($"/user/{user.Id}/animals");
                             NotPlantsDialog = true;
+                            StateHasChanged();
                         }
                         else
                         {
@@ -346,9 +529,8 @@ else
 
                         if (deleteRes.IsSuccessStatusCode)
                         {
-                            FoodDialog = false;
-                            navigation.NavigateTo($"/user/{user.Id}/animals");
                             NotMeatDialog = true;
+                            StateHasChanged();
                         }
                         else
                         {
@@ -368,9 +550,8 @@ else
 
                         if (deleteRes.IsSuccessStatusCode)
                         {
-                            FoodDialog = false;
-                            navigation.NavigateTo($"/user/{user.Id}/animals");
                             EatDessertDialog = true;
+                            StateHasChanged();
                         }
                         else
                         {

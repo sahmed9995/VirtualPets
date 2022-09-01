@@ -5,6 +5,7 @@ namespace VirtualPets2.Server.Services.Animals
     public interface IAnimalService
     {
         Task<List<AnimalListItem>> GetAllAnimalsAsync();
+        Task<List<AnimalDetails>> GetAllAnimalDetailsAsync();
         Task<AnimalDetails> GetAnimalAsync(int id);
         Task<List<AnimalListItem>> GetAllAnimalsByPriceAsync(double money);
         Task<bool> BuyAnimal(int userId, int animalId, UserAnimalCreate model);
@@ -18,5 +19,6 @@ namespace VirtualPets2.Server.Services.Animals
         Task<bool> ChangeAnimalFoodId(int animalId, AnimalFoodEdit model);
         Task<bool> LoseMoneyToFeedAnimalMeat(int userId, UserMoney model);
         Task<bool> LoseMoneyToFeedAnimalPlants(int userId, UserMoney model);
+        Task<bool> ChangeAnimalSerivceId(int animalId, AnimalServiceEdit model);
     }
 }

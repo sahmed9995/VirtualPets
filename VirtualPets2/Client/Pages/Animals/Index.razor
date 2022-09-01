@@ -16,14 +16,6 @@
 }
 else
 {
-    <h5>Search By:</h5>
-    <div class="col mx-auto justify-content-between">
-
-        <a href=@("animal/price")>Price</a>
-        <a href=@("animal/dwelling")>Animal Habitat</a>
-        <a href=@("animal/diet")>Animal Diet</a>
-
-    </div>
     @foreach (var animal in animals)
     {
         if (animal.Type == "Feline")
@@ -166,7 +158,7 @@ else
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">You cannot buy this animal</h4>
-                        <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                        <button type="button" class="close" @onclick="() => OnBuyDialogClose(true)">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p>Sorry, it looks like you have already bought this animal!</p>
@@ -182,7 +174,7 @@ else
 
     @if (BuyDialogOpenFail)
     {
-        <BuyModal Title="Better Luck Next Time" Text="Sorry, it looks like you don't have enough money to buy this animal!"></BuyModal>
+        <BuyModal Title="Better Luck Next Time" Text="Sorry, it looks like you don't have enough money to buy this animal!" OnClose="OnBuyDialogClose"></BuyModal>
     }
 
     if (NameDialog)
@@ -192,7 +184,6 @@ else
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Animal Name</h4>
-                        <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="container">
@@ -237,6 +228,13 @@ else
     public bool BuyDialogOpenFail { get; set; }
     public bool NameDialog { get; set; }
     public bool CannotBuyDialog { get; set; }
+
+    private async Task OnBuyDialogClose(bool accepted)
+    {
+        CannotBuyDialog = false;
+        BuyDialogOpenFail = false;
+        StateHasChanged();
+    }
 
     private async Task OpenBuyDialog(AnimalListItem aniUser)
     {

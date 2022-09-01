@@ -135,28 +135,6 @@ namespace VirtualPets2.Server.Services.Users
             return await _context.SaveChangesAsync() == 1;
         }
 
-        //public async Task<IEnumerable<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId)
-        //{
-        //    var user = await _context.Users
-
-        //        // Using .Include LINQ function to include virtual student table from CourseEntity
-        //        .Include(entity => entity.foods)
-
-        //        // .FirstorDefaultAsync LINQ function can be used to find any property and it only finds the first entity and cannot call multiple entites and cannot be added to a list, it cannot be used with bool task, it can be used after other LINQ functions but not before
-        //        .FirstOrDefaultAsync(entity => entity.Id == userId);
-
-        //    /* if (user == null)
-        //         return null;*/
-
-        //    // Returns list of each student's details in the course
-        //    return user.foods
-        //        .Select(e => new FoodUserDetails
-        //        {
-        //            Name = e.Name,
-        //            Type = (Kind)e.Type,
-        //        }).ToList();
-        //}
-
         public async Task<bool> UpdateUserAsync(UserEdit model)
         {
             var user = await _context.Users
@@ -164,7 +142,7 @@ namespace VirtualPets2.Server.Services.Users
 
             if (model.Username == null)
             {
-                user.Username = user.Username;
+                return true;
             }
             else
             {
@@ -173,7 +151,7 @@ namespace VirtualPets2.Server.Services.Users
 
             if (model.Password == null)
             {
-                user.Password = user.Password;
+                return true;
             }
             else
             {
@@ -182,7 +160,7 @@ namespace VirtualPets2.Server.Services.Users
 
             if (model.Nickname == null)
             {
-                user.Nickname = user.Nickname;
+                return true;
             }
             else
             {

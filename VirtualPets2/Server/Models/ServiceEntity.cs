@@ -3,8 +3,7 @@
     public class ServiceEntity
     {
         public int Id { get; set; }
-        public UserEntity User { get; set; }
         public string Task { get; set; }
-        public double Money { get; set; }
+        public int Money { get; set; }
     }
 }

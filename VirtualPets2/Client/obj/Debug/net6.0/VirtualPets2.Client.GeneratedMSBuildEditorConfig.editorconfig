@@ -22,10 +22,6 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Animals/Buy.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5pbWFsc1xCdXkucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Animals/BuyModal.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5pbWFsc1xCdXlNb2RhbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -38,24 +34,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5pbWFsc1xJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Animals/Price.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5pbWFsc1xQcmljZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Animals/Price2.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5pbWFsc1xQcmljZTIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Authentication.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRpb24ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Foods/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9vZHNcQ3JlYXRlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Foods/Delete.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9vZHNcRGVsZXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ssagl/ElevenFiftyProjects/codingImmersions/Assignments/VirtualPets2/VirtualPets2/Client/Pages/Foods/Index.razor]

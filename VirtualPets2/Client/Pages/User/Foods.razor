@@ -5,7 +5,7 @@
 @attribute [Authorize]
 
 <h3>Your Pantry</h3>
-<a href=@("/user")>Go back to profile page</a>
+
 
 @if (foods == null)
 {
@@ -14,7 +14,6 @@
 }
 else
 {
-
     <a href=@($"food")>You can buy food from here!</a>
 
     <div class="row">
