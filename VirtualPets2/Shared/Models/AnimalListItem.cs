@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtualPets2.Shared.Models
 {
+    //Model used to show brief description of animals
     public class AnimalListItem
     {
         public int Id { get; set; }

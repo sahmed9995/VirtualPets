@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtualPets2.Shared.Models
 {
+    //Model used to add data to UserEntity table in database
     public class UserCreate
     {
         public string Username { get; set; }

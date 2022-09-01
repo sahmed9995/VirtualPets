@@ -2,6 +2,7 @@
 
 namespace VirtualPets2.Server.Models
 {
+    //User and Animal Joining table
     public class UserAnimal
     {
         public int Id { get; set; }

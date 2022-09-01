@@ -1,12 +1,23 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
 
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 
 <AuthorizeView>
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+        @if (user == null)
+        {
+            <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+        }
+        else
+        {
+            //Shows UserEntity Nickname
+            <a href="authentication/profile">Hello, @user.Nickname!</a>
+        }
+        
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
     </Authorized>
     <NotAuthorized>
@@ -20,5 +31,12 @@
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
+    }
+
+    public UserDetails user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await http.GetFromJsonAsync<UserDetails>("/api/user");
     }
 }

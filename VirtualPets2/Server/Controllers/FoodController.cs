@@ -16,7 +16,7 @@ namespace VirtualPets2.Server.Controllers
             _service = service;
         }
 
-
+        //Gets all the foods for the index page
         [HttpGet]
         public async Task<List<FoodDetails>> Index()
         {
@@ -24,10 +24,10 @@ namespace VirtualPets2.Server.Controllers
             return foods.ToList();
         }
 
+        //Creates a new food
         [HttpPost]
         public async Task<IActionResult> Create(FoodCreate model)
         {
-
             bool wasCreated = await _service.CreateFoodAsync(model);
 
             if (wasCreated) return Ok();
@@ -35,9 +35,9 @@ namespace VirtualPets2.Server.Controllers
             {
                 return UnprocessableEntity();
             }
-
         }
 
+        //Creates a new UserFoodEntity using a foodId and userId when you buy a food
         [HttpPost("{foodId}/buy/{userId}")]
         public async Task<IActionResult> AddFoodToUser(int userId, int foodId, UserFoodCreate model)
         {
@@ -50,6 +50,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates UserEntity Money by subtracting FoodEntity Price from it when you buy a food using the userId and the food Id
         [HttpPut("{userId}/buy/{foodId}")]
         public async Task<IActionResult> ChangeUserMoney(int foodId, int userId, UserMoney model)
         {
@@ -62,6 +63,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Gets the details about FoodEntity from the AnimalEntity FoodId
         [HttpGet("{animalId}/details")]
         public async Task<FoodDetails> GetFoodDetails(int animalId)
         {

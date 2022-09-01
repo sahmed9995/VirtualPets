@@ -1,9 +1,34 @@
 ﻿@page "/"
+@using VirtualPets2.Shared.Models
+@inject HttpClient http
 
-<PageTitle>Index</PageTitle>
+@if (user == null)
+{
+    <PageTitle>Weclome To Virtual Pets!</PageTitle>
+    <h1>Weclome To Virtual Pets!</h1>
+    <h3>This is an interactive game where you can buy pets and take care of them.</h3>
+    <h4>In this game, you can:</h4>
+    <ul>
+        <li>Buy Animals</li>
+        <li>Buy pet food</li>
+        <li>Feed your pets</li>
+        <li>Take care of your pets</li>
+    </ul>
+    <h3>Click the profile tab to create an account and begin playing ...</h3>
+}
+else
+{
+    <PageTitle>Welcome Back to Virtual Pets</PageTitle>
+    <h1>Welcome Back to Virtual Pets</h1>
+    <h2>Have fun playing with your animals!</h2>
+}
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+@code{
+    public UserDetails user;
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    protected override async Task OnInitializedAsync()
+    {
+        user = await http.GetFromJsonAsync<UserDetails>("/api/user");
+    }
+}

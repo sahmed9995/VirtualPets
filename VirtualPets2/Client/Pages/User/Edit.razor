@@ -5,6 +5,8 @@
 @inject NavigationManager navigation
 @attribute [Authorize]
 
+@*This page comes up when you choose to update your account*@
+
 <h3>Edit your Account!</h3>
 
 @if (errorMessage != null)
@@ -13,22 +15,20 @@
 }
 
 <div class="container">
-    <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <EditForm Model="@model">
         <div class="form-group">
-            <label>Username:</label>
+            <label>Username: (You have to put something)</label>
             <InputText class="form-control" @bind-Value="model.Username" />
         </div>
         <div class="form-group">
-            <label>Password:</label>
+            <label>Password: (You have to put something)</label>
             <InputText class="form-control" @bind-Value="model.Password" />
         </div>
         <div class="form-group">
-            <label>Nickname:</label>
+            <label>Nickname: (You have to put something)</label>
             <InputText class="form-control" @bind-Value="model.Nickname" />
         </div>
-        <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+        <button type="submit" class="btn btn-primary btn-block mt-5" @onclick="() => HandleSubmit()">Submit</button>
     </EditForm>
 </div>
 
@@ -44,10 +44,9 @@
     }
 
 
-
+    //Method that updates details in UserEntity, if updated successfully it reroutes to the profile index page
     private async void HandleSubmit()
     {
-        /*System.Diagnostics.Debugger.Break();*/
         var createRes = await http.PutAsJsonAsync<UserEdit>($"/api/user/edit/{userId}", model);
 
         if (createRes.IsSuccessStatusCode)

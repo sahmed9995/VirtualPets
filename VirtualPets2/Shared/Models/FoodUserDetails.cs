@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtualPets2.Shared.Models
 {
+    //Model used to get FoodEntity details for the user to see
     public class FoodUserDetails
     {
         public int Id { get; set; }

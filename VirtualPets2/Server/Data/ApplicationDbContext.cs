@@ -14,6 +14,7 @@ namespace VirtualPets2.Server.Data
         {
         }
 
+        //Creating tables in database
         public DbSet<AnimalEntity> Animals { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<FoodEntity> Foods { get; set; }
@@ -22,7 +23,7 @@ namespace VirtualPets2.Server.Data
         public DbSet<UserAnimal> UserAnimals { get; set; }
 
         
-
+        //Seeding the database with animals, foods, and services
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

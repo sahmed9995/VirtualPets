@@ -14,6 +14,7 @@ namespace VirtualPets2.Server.Services.Foods
             _context = context;
         }
 
+        //Method to show all foods in the Foods table
         public async Task<List<FoodDetails>> GetAllFoodsAsync()
         {
             var foods = _context.Foods
@@ -27,6 +28,7 @@ namespace VirtualPets2.Server.Services.Foods
             return await foods.ToListAsync();
         }
 
+        //Method to create a new FoodEntity
         public async Task<bool> CreateFoodAsync(FoodCreate model)
         {
 
@@ -43,6 +45,7 @@ namespace VirtualPets2.Server.Services.Foods
             return numberOfChanges == 1;
         }
 
+        //Method to add foodId and userId to UserFood table
         public async Task<bool> BuyFood(int userId, int foodId, UserFoodCreate model)
         {
             var food = await _context.Foods
@@ -65,6 +68,7 @@ namespace VirtualPets2.Server.Services.Foods
             return await _context.SaveChangesAsync() == 1;
         }
 
+        //Method to subtract AnimalEntity Price from UserEntity Money when buying an animal
         public async Task<bool> ChangeMoneyFood(int foodId, int userId, UserMoney model)
         {
             var food = await _context.Foods
@@ -85,6 +89,7 @@ namespace VirtualPets2.Server.Services.Foods
             return numberOfChanges == 1;
         }
 
+        //Method to get food details from Animal foodId to have correct money adjustment and show the correct modal
         public async Task<FoodDetails> GetFoodDetails(int animalId)
         {
             var animal = await _context.Animals
@@ -106,33 +111,5 @@ namespace VirtualPets2.Server.Services.Foods
             };
             return foodDetails;
         }
-        //public async Task<bool> BuyFood(int foodId)
-        //{
-        //    var user = await _context.Users
-        //        .Include(user => user.foods)
-        //        .FirstOrDefaultAsync();
-
-        //    var food = await _context.Animals
-        //        .Where(entity => entity.Id == foodId)
-        //        .FirstOrDefaultAsync();
-        //    if (food == null)
-        //        return false;
-
-        //    if (food.Price > user.Money)
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        user.Money -= food.Price;
-
-        //        user.animals.Add(food);
-
-        //        var numberOfChanges = await _context.SaveChangesAsync();
-        //        return numberOfChanges == 1;
-        //    }
-        //}
-
-
     }
 }

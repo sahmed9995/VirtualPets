@@ -1,5 +1,6 @@
 ﻿namespace VirtualPets2.Server.Models
 {
+    //Table that contains all the foods
     public class FoodEntity
     {
         public int Id { get; set; }

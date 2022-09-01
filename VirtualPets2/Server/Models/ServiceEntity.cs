@@ -1,5 +1,6 @@
 ﻿namespace VirtualPets2.Server.Models
 {
+    //Service table that contains services
     public class ServiceEntity
     {
         public int Id { get; set; }

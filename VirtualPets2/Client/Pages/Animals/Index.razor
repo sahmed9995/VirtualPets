@@ -5,7 +5,7 @@
 @attribute [Authorize]
 @inject NavigationManager navigation
 
-
+@*Index page of the Animal Adoption Agency, this page shows animals by type*@
 <h3>Welcome to the Animal Adoption Agency</h3>
 
 @if (user == null)
@@ -203,6 +203,8 @@ else
         </div>
     }
 
+    
+
 }
 
 
@@ -231,11 +233,25 @@ else
 
     private async Task OnBuyDialogClose(bool accepted)
     {
+        Felines.Clear();
+        Mammals.Clear();
+        Apes.Clear();
+        Reptiles.Clear();
+        Birds.Clear();
+        Fish.Clear();
         CannotBuyDialog = false;
         BuyDialogOpenFail = false;
         StateHasChanged();
     }
 
+    //Method that happens when you click the buy button, it sets the animal equal to a model
+    //It checks if the AnimalEntity Price is higher than the UserEntity Money
+    //It also checks if the user has already bought the animal, by checking if the animalId is in the UserAnimal table
+    //If the user has already bought the animal, they cannot buy it again
+    //If the Price is higher, then the user cannot buy the animal and a modal pops up
+    //If the Price is lower, then the animalId and userId are added to the UserAnimal table
+    //Then the Price is subtracted from the Money 
+    //Then the NameDialog pops up to change the name of the animal
     private async Task OpenBuyDialog(AnimalListItem aniUser)
     {
         _animalToBuy = aniUser;
@@ -254,7 +270,7 @@ else
         }
         else if (CannotBuyDialog == true)
         {
-            navigation.NavigateTo("/animal");
+            StateHasChanged();
         }
         else
         {
@@ -274,6 +290,7 @@ else
         }
     }
 
+    //Method to update animal name in the UserAnimal table
     private async void HandleSubmit()
     {
         var changed = await http.PutAsJsonAsync($"/api/animal/{_animalToBuy.Id}/name", name);
@@ -288,6 +305,7 @@ else
         }
 
     }
+
 
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }

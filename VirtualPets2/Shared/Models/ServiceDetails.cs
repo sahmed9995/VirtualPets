@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtualPets2.Shared.Models
 {
+    //Model used to get ServiceEntity details
     public class ServiceDetails
     {
         public int Id { get; set; }

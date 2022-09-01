@@ -16,6 +16,7 @@ namespace VirtualPets2.Server.Controllers
             _service = service;
         }
 
+        //Gets all services in the Services table
         [HttpGet]
         public async Task<List<ServiceDetails>> GetAllServices()
         {
@@ -23,6 +24,7 @@ namespace VirtualPets2.Server.Controllers
             return services.ToList();
         }
 
+        //Updates UserEntity Money by adding ServiceEntity Money to it by using the userId to access the money and then using the animalId to find the ServiceId
         [HttpPut("{animalId}/user/{userId}")]
         public async Task<IActionResult> AddMoney(int userId, int animalId, UserMoney model)
         {
@@ -37,6 +39,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Gets the AnimalEntity ServiceId using the animaId
         [HttpGet("{animalId}")]
         public async Task<AnimalServiceEdit> GetAnimalServiceId(int animalId)
         {

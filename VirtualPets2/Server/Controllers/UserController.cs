@@ -31,6 +31,7 @@ namespace VirtualPets2.Server.Controllers
             return true;
         }
 
+        //Gets User details for Index page
         [HttpGet]
         public async Task<UserDetails> Index()
         {
@@ -39,6 +40,7 @@ namespace VirtualPets2.Server.Controllers
             return user;
         }
 
+        //Gets animals in UserAnimal table using userId
         [HttpGet("{userId}/animals")]
         public async Task<List<AnimalUserDetails>> UserAnimal(int userId)
         { 
@@ -47,6 +49,7 @@ namespace VirtualPets2.Server.Controllers
             return animals.ToList();
         }
 
+        //Gets foods in UserFood table using userId
         [HttpGet("{id}/foods")]
         public async Task<IEnumerable<FoodUserDetails>> Foods(int id)
         {
@@ -56,6 +59,7 @@ namespace VirtualPets2.Server.Controllers
             return foods.ToList();
         }
 
+        //Creates a new user
         [HttpPost]
         public async Task <IActionResult> Create(UserCreate model)
         {
@@ -70,6 +74,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates user details
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> Edit(int id, UserEdit model)
         {
@@ -83,6 +88,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Deletes food from UserFood table using foodId
         [HttpDelete("{foodId}")]
         public async Task<IActionResult> Delete(int foodId)
         {

@@ -3,7 +3,10 @@
 @using VirtualPets2.Shared.Models
 @inject HttpClient http
 @attribute [Authorize]
+@inject NavigationManager navigation
 
+@*This page is the index of the Food Shop , if you have not made an account you cannot access the shop
+and if you have, it shows all the food in the Foods table, they are grouped by type*@
 
 <h3>Welcome to Fluffy's Food Store</h3>
 
@@ -130,8 +133,6 @@ else
 }
 
 
-
-
 @code {
     public UserDetails user;
     public List<FoodDetails> foods;
@@ -147,13 +148,23 @@ else
     public bool BuyDialogOpenFail { get; set; }
     public bool BuyDialogOpenSuccess { get; set; }
 
+    //Method that happens when you press the X on the modals
+    //The lists are cleared so that they can be re-rendered by the StateHasChanged();
     private async Task OnBuyDialogClose(bool accepted)
     {
+        Meat.Clear();
+        Plants.Clear();
+        Dessert.Clear();
         BuyDialogOpenFail = false;
         BuyDialogOpenSuccess = false;
         StateHasChanged();
     }
 
+    //Method that happens when you click the buy button, it sets the food equal to a model
+    //It checks if the FoodEntity Price is higher than the UserEntity Money
+    //If the Price is higher, then the user cannot buy the food and a modal pops up
+    //If the Price is lower, then the fooId and userId are added to the UserFood table
+    //Then the Price is subtracted from the Money 
     private async Task OpenBuyDialog(FoodDetails foodUser)
     {
         _foodToBuy = foodUser;

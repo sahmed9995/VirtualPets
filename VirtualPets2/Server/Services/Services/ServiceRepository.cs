@@ -12,6 +12,7 @@ namespace VirtualPets2.Server.Services.Services
             _context = context;
         }
 
+        //Method to get all services in the Service table
         public async Task<List<ServiceDetails>> GetAllTasks()
         {
             var services = _context.Services
@@ -24,6 +25,7 @@ namespace VirtualPets2.Server.Services.Services
             return await services.ToListAsync();
         }
 
+        //Method to adjust UserEntity Money based on which task the user chose
         public async Task<bool> ChangeMoney(int userId, int animalId, UserMoney model)
         {
             var user = await _context.Users
@@ -46,6 +48,7 @@ namespace VirtualPets2.Server.Services.Services
             return numberOfChanges == 1;
         }
 
+        //Method to get service Id from AnimalEntity to show correct modal
         public async Task<AnimalServiceEdit> GetServiceId(int animalId)
         {
             var animal = await _context.Animals

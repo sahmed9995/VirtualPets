@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtualPets2.Shared.Models
 {
+    //Model used to edit UserEntity
     public class UserEdit
     {
         public int Id { get; set; }

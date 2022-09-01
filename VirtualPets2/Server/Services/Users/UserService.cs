@@ -20,6 +20,7 @@ namespace VirtualPets2.Server.Services.Users
 
         public void SetUserId(string userId) => _userId = userId;
 
+        //Method to create a new user using the UserCreate model to insert into the User table in the database
         public async Task<bool> RegisterUserAsync(UserCreate model)
         {
 
@@ -41,6 +42,7 @@ namespace VirtualPets2.Server.Services.Users
             return numberOfChanges == 1;
         }
 
+        //Method to show details of the user using the UserDetails model
         public async Task<UserDetails> GetUserAsync()
         {
             var user = await _context.Users
@@ -56,6 +58,7 @@ namespace VirtualPets2.Server.Services.Users
             return details;
         }
 
+        //Method to show all the animals in the UserAnimal table that have the same userId using the AnimalUserDetails
         public async Task<List<AnimalUserDetails>> ShowAnimalsbyUserIdAsync(int userId)
         {
             List<AnimalEntity> animalList = new List<AnimalEntity>();
@@ -88,6 +91,7 @@ namespace VirtualPets2.Server.Services.Users
             return null;
         }
 
+        //Method to show all foods in the UserFood table that have the same user Id using the FoodUserDetails model
         public async Task<List<FoodUserDetails>> ShowFoodsbyUserIdAsync(int userId)
         {
             List<FoodEntity> foodList = new List<FoodEntity>();
@@ -119,6 +123,7 @@ namespace VirtualPets2.Server.Services.Users
             }
         }
 
+        //Method to delete food from UserFood table 
         public async Task<bool> DeleteFoodFromUser(int animalId)
         {
             var animal = await _context.Animals
@@ -135,6 +140,7 @@ namespace VirtualPets2.Server.Services.Users
             return await _context.SaveChangesAsync() == 1;
         }
 
+        //Method to edit user details
         public async Task<bool> UpdateUserAsync(UserEdit model)
         {
             var user = await _context.Users

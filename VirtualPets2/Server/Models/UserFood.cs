@@ -1,5 +1,6 @@
 ﻿namespace VirtualPets2.Server.Models
 {
+    // UserFood Joining Table
     public class UserFood
     {
         public int Id { get; set; }

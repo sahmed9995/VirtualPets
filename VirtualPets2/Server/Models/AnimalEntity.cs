@@ -2,6 +2,7 @@
 
 namespace VirtualPets2.Server.Models
 {
+    //Animal table that contains all the animals
     public class AnimalEntity
     {
         public int Id { get; set; }

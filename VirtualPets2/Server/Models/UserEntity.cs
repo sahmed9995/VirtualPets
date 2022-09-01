@@ -1,6 +1,7 @@
 ﻿
 namespace VirtualPets2.Server.Models
 {
+    //User Table that contains user details
     public class UserEntity
     {
         public int Id { get; set; }

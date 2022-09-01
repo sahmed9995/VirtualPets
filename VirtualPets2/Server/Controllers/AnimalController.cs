@@ -16,6 +16,7 @@ namespace VirtualPets2.Server.Controllers
             _service = service;
         }
 
+        //Gets brief details about all the animals in the Animals table
         [HttpGet]
         public async Task<List<AnimalListItem>> Index()
         {
@@ -23,6 +24,7 @@ namespace VirtualPets2.Server.Controllers
             return animals.ToList();
         }
 
+        //Gets all the details of all the animals
         [HttpGet("details")]
         public async Task<List<AnimalDetails>> GetAnimalDetails()
         {
@@ -30,6 +32,7 @@ namespace VirtualPets2.Server.Controllers
             return animals.ToList();
         }
 
+        //Gets all the details of a specific animal using the animalId
         [HttpGet("{id}")]
         public async Task<AnimalDetails> Details(int id)
         {
@@ -37,19 +40,7 @@ namespace VirtualPets2.Server.Controllers
             return animal;
         }
 
-        [HttpGet("price")]
-        public IActionResult Price()
-        {
-            return Redirect("price");
-        }
-
-        [HttpGet("price/{money}")]
-        public async Task<List<AnimalListItem>> Price2(double money)
-        {
-            var animals = await _service.GetAllAnimalsByPriceAsync(money);
-            return animals.ToList();
-        }
-
+        //Creates a new UserAnimalEntity using the animalId and userId when buying an animal
         [HttpPost("{animalId}/buy/{userId}")]
         public async Task<IActionResult> AddAnimalToUser(int userId, int animalId, UserAnimalCreate model)
         {
@@ -62,6 +53,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates UserEntity Money by subtracting AnimalEntity Price from it when buying an animal by using the userId and animalId
         [HttpPut("{userId}/buy/{animalId}")]
         public async Task<IActionResult> ChangeUserMoney(int animalId, int userId, UserMoney model)
         {
@@ -75,6 +67,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates animal name in the UserAnimal table
         [HttpPut("{animalId}/name")]
         public async Task<IActionResult> ChangeAnimalName(int animalId, AnimalEdit model)
         {
@@ -88,6 +81,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Gets the names of all the animals in the UserAnimal table using the user Id
         [HttpGet("{userId}/names")]
         public async Task<List<AnimalEdit>> UserAnimalName(int userId)
         {
@@ -96,6 +90,7 @@ namespace VirtualPets2.Server.Controllers
         }
 
 
+        //Gets all the animal Ids in the UserAnimal table to get the AnimalEntity details using the userId
         [HttpGet("{userId}/Ids")]
         public async Task<List<UserAnimalDetails>> UserAnimalId(int userId)
         {
@@ -103,6 +98,7 @@ namespace VirtualPets2.Server.Controllers
             return animalIds.ToList();
         }
 
+        //Updates User Money when you feed a carnivorous animal meat using the userId
         [HttpPut("{userId}/meat")]
         public async Task<IActionResult> ChangeUserMoneyMeat(int userId, UserMoney model)
         {
@@ -116,6 +112,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates User Money when you feed a herbivorous animal plants using the userId
         [HttpPut("{userId}/plants")]
         public async Task<IActionResult> ChangeUserMoneyPlants(int userId, UserMoney model)
         {
@@ -129,6 +126,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates User Money when you feed an animal dessert using the userId
         [HttpPut("{userId}/dessert")]
         public async Task<IActionResult> ChangeUserMoneyDesserts(int userId, UserMoney model)
         {
@@ -142,6 +140,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates User Money when you feed a herbivorous animal meat using the userId
         [HttpPut("{userId}/Notplants")]
         public async Task<IActionResult> LoseUserMoneyPlants(int userId, UserMoney model)
         {
@@ -155,6 +154,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates User Money when you feed a carnivorous animal plants using the userId
         [HttpPut("{userId}/Notmeat")]
         public async Task<IActionResult> LoseUserMoneyMeat(int userId, UserMoney model)
         {
@@ -168,6 +168,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates AnimalEntity FoodId when you feed an animal using the animalId and foodId
         [HttpPut("{animalId}/foodId")]
         public async Task<IActionResult> ChangeAnimalFoodId(int animalId, AnimalFoodEdit model)
         {
@@ -181,6 +182,7 @@ namespace VirtualPets2.Server.Controllers
             }
         }
 
+        //Updates AnimalEntity ServiceId when you take care of your pet using the animalId and the serivce Id
         [HttpPut("{animalId}/serviceId")]
         public async Task<IActionResult> ChangeAnimalServiceId(int animalId, AnimalServiceEdit model)
         {

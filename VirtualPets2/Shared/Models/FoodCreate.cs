@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace VirtualPets2.Shared.Models
 {
+    //Model used to create a new FoodEntity
     public class FoodCreate
     {
         public string Name { get; set; }

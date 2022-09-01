@@ -5,6 +5,9 @@
 @attribute [Authorize]
 @inject NavigationManager navigation
 
+@*This page shows the user all the animals that they have bought. It allows them to feed them, change their name, or take care of them. 
+When they do one of those things, a modal will pop up telling them what happened*@
+
 <h3>Your Animals</h3>
 <a href=@("/user")>Go back to profile page</a>
 
@@ -39,7 +42,7 @@ else
                         <h6>Dwelling: @animal.Dwelling</h6>
                         <h6>Diet: @animal.Diet</h6>
                     </div>
-                    <a href="animal/{animalId}/name">Change your pet's name</a>
+                    <button @onclick="() => ChangeName(animal)">Change your pet's name</button>
                     <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenFoodDialog(animal)">Feed</button>
                     <button type="button" class="btn btn-primary btn-sm" @onclick="() => OpenServiceDialog(animal)">Take Care of your Pet</button>
                 </div>
@@ -48,8 +51,9 @@ else
          <a href=@("/user")>Go back to profile page</a>
      </div>
 
-     if (FoodDialog)
-     {
+     @*This modal pops up when you choose to feed your pet, it allows you to choose which food to feed them*@
+    if (FoodDialog)
+    {
         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -74,6 +78,7 @@ else
                                 <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
                             </EditForm>
                         </div>
+                        <h5>(Press the X if you don't have any food!)</h5>
                     </div>
                     <div class="modal-footer">
                     </div>
@@ -82,6 +87,7 @@ else
         </div>
     }
 
+    @*This modal pops up when you choose to take care of your pet, it allows you to choose which task to do for them*@
     if (ServiceDialog)
     {
         <div class="col-md-3 mb-2">
@@ -103,8 +109,6 @@ else
                 </EditForm>
             </div>
         </div>
-
-        <Services></Services>
     }
 
     if (EatMeatDialog)
@@ -170,12 +174,12 @@ else
         </FoodModal>
     }
     if (Groomers)
-     {
+    {
         <FoodModal Title="Your pet was scared of the scissors, but is all nice and clean now!"
            Text="You get $15!"
            OnClose="@OnDialogsClose">
         </FoodModal>
-     }
+    }
      if (Cuddle)
      {
         <FoodModal Title="Your pet loved being close to you!"
@@ -246,11 +250,45 @@ else
            OnClose="@OnDialogsClose">
         </FoodModal>
      }
+
+     //This modal pops up when you choose to change your animal's name
+    if (NewNameDialog)
+    {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Animal Name</h4>
+                        <button type="button" class="close" @onclick="() => OnDialogsClose(true)">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <EditForm Model="@model" OnValidSubmit="@HandleNameSubmit">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                <div class="form-group">
+                                    <label>Choose a name for your new pet:</label>
+                                    <InputText class="form-control" @bind-Value="name.Name" />
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (SuccessDialog)
+    {
+        <FoodModal Title="Congratulations!" Text="Your pet's name has been successfully changed! They love it!" OnClose="OnDialogsClose"></FoodModal>
+    }
 }
 
 @code {
     [Parameter]
     public int userId { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
     int i = 0;
 
     public UserDetails user;
@@ -259,14 +297,7 @@ else
     public AnimalFoodEdit AnimalFood = new();
     public AnimalServiceEdit AnimalService = new();
     public List<ServiceDetails> services { get; set; } = new List<ServiceDetails>();
-
-    [Parameter]
-    public EventCallback<bool> OnClose { get; set; }
-
-    private Task ModalCancel()
-    {
-        return OnClose.InvokeAsync(false);
-    }
+    public AnimalEdit name = new();
 
     private AnimalUserDetails _animaltoFeed;
 
@@ -299,15 +330,26 @@ else
     public bool Pet { get; set; }
     public bool Clothes { get; set; }
     public bool Cuddle { get; set; }
+    public bool NewNameDialog { get; set; }
+    public bool SuccessDialog { get; set;}
 
+    //This allows modals to close when you press the X
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    //This allows the FoodDialog to close when pressing the X
     private async Task OnFoodDialogClose(bool accepted)
     {
         FoodDialog = false;
         StateHasChanged();
     }
 
+    //This allows all the modals to close when the X is pressed
     private async Task OnDialogsClose(bool accepted)
     {
+        i = 0;
         EatMeatDialog = false;
         EatDessertDialog = false;
         EatPlantsDialog = false;
@@ -327,9 +369,10 @@ else
         Pet = false;
         Clothes = false;
         Cuddle = false;
+        NewNameDialog = false;
+        SuccessDialog = false;
         StateHasChanged();
     }
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -340,6 +383,7 @@ else
         services = await http.GetFromJsonAsync<List<ServiceDetails>>("/api/service");
     }
 
+    //Method that happens when you click on the Feed button, sets the animal equal to a model and it opens the FoodDialog to choose which food to feed it
     private async Task OpenFoodDialog(AnimalUserDetails aniUser)
     {
         _animaltoFeed = aniUser;
@@ -348,6 +392,7 @@ else
         StateHasChanged();
     }
 
+    //Method that happens when you click on the Take care of your pet button, opens the ServiceDialog modal to choose which service to do for it
     private async Task OpenServiceDialog(AnimalUserDetails aniUser)
     {
         _animaltoFeed = aniUser;
@@ -356,6 +401,34 @@ else
         StateHasChanged();
     }
 
+    //Method that happens when you click the Change animal's name, opens NewNameDialog to type out new name
+    private async Task ChangeName(AnimalUserDetails aniUser)
+    {
+        _animaltoFeed = aniUser;
+
+        NewNameDialog = true;
+        StateHasChanged();
+    }
+
+    //Method that happens when you click the submit button of the NewNameDialog, it updates the animal name in the UserAnimal table and opens the SuccessDialog if updated
+    private async void HandleNameSubmit()
+    {
+        var ChangedName = await http.PutAsJsonAsync($"/api/animal/{_animaltoFeed.Id}/name", name);
+
+        if (ChangedName.IsSuccessStatusCode)
+        {
+            i = 0;
+            NewNameDialog = false;
+            SuccessDialog = true;
+            animalNames = await http.GetFromJsonAsync<List<AnimalEdit>>($"/api/animal/{userId}/names");
+            StateHasChanged();
+            
+        }
+    }
+
+    //Method that happens when you click the submit button of the ServiceDialog, it updates the ServiceId of the AnimalEntity
+    //Which then updates the UserEntity Money by adding the Service Money to it
+    //Depending on which service you chose you would get a certain amount of money and a certain modal would open up
     private async void HandleServiceSubmit()
     {
         ServiceDialog = false;
@@ -442,6 +515,12 @@ else
         }
 
     }
+
+    //Method that happens when you click the submit button in the FoodDialog, it updates the FoodId of the AnimalId
+    //Then sets that FoodId to a variable which gets the FoodEntity details of that food with the same Id
+    //Then it updates the UserEntity Money depending on what type the animal is and what type the food was
+    //Then it deletes the food from the UserFood table
+    //It also opens up a certain modal depending of the type of animal that was feed and the type of food it was given
     private async void HandleSubmit()
     {
         FoodDialog = false;
@@ -563,52 +642,13 @@ else
                 }
             }
         }
-        else 
+        else
         {
             FoodDialog = false;
             navigation.NavigateTo($"/user/{user.Id}/animals");
             FailDialog = true;
         }
     }
-    
-    //    else if (_foodtoDelete.Type == Kind.Plants && _animaltoFeed.Diet == Food.Herbivore)
-    //    {
-    //        var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/plants", userMoney);
-
-    //        if (updated.IsSuccessStatusCode)
-    //        {
-    //            var deleteRes = await http.DeleteAsync($"/api/food/{foodId}");
-
-    //            if (deleteRes.IsSuccessStatusCode)
-    //            {
-    //                EatPlantsDialog = true;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            FailDialog = true;
-    //        }
-    //    }
-    //    else if (_foodtoDelete.Type == Kind.Dessert)
-    //    {
-    //        var updated = await http.PutAsJsonAsync($"/api/animal/{user.Id}/dessert", userMoney);
-
-    //        if (updated.IsSuccessStatusCode)
-    //        {
-    //            var deleteRes = await http.DeleteAsync($"/api/food/{foodId}");
-
-    //            if (deleteRes.IsSuccessStatusCode)
-    //            {
-    //                EatDessertDialog = true;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            FailDialog = true;
-    //        }
-    //    }
-
-    //}
 }
 
 

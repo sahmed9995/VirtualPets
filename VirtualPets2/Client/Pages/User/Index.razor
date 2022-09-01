@@ -4,7 +4,10 @@
 @inject HttpClient http
 @attribute [Authorize]
 
-<h3>Profile</h3>
+@*Profile Index page that makes you create an account if you have not already, and if you have then it shows you your account details
+    and allows you to update your account or look at a list of the pets that you have or a list of foods that you have bought
+*@
+<h1><strong>Profile</strong></h1>
 
 @if (user == null)
 {
@@ -21,34 +24,23 @@ else
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Account Information</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-                <tr>
-                    <td>@user.Id</td>
-                    <td><strong>Username: @user.Username</strong></td>
-                    <td><strong>Nickname: @user.Nickname</strong></td>
-                    <td><strong>Money: $@user.Money</strong></td>
-                    <td>
-                    <a href=@($"user/{user.Id}/animals")>Click here to see the animals that you have</a>
-                    </td>
-                <td>
-                    <a href=@($"user/{user.Id}/foods")>Click here to see the food that you have</a>
-                </td>
-                </tr>
-        </tbody>
-    </table>
-
+    <h2>Account Information</h2>
+    <h4>Username: @user.Username</h4>
+    <h4>Nickname: @user.Nickname</h4>
+    <h4>Money: $@user.Money</h4>
+                  
+    <a href=@($"user/{user.Id}/animals")>Click here to see the animals that you have</a>
+    <div>
+        <a href=@($"user/{user.Id}/foods")>Click here to see the food that you have</a>
+    </div>
+    
 }
 
 @code {
+    //Sets what user is
     public UserDetails user;
 
+    //Gets user details right when the page opens
     protected override async Task OnInitializedAsync()
     {
         user = await http.GetFromJsonAsync<UserDetails>("/api/user");
